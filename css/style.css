@@ -4,6 +4,15 @@
     font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
 }
 
+html, body {
+    height: 100%;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+}
+
 header {
     background-color: rgb(219, 219, 219);;
     text-align: center;
@@ -12,8 +21,6 @@ header {
 
 footer {
     background-color: rgb(241, 241, 241);
-    position: absolute;
-    bottom: 0;
     width: 100%;
     height: 50px;
     text-align: center;
@@ -39,6 +46,34 @@ footer h3{
     visibility: visible;
 }
 
+.button {
+    position: relative;
+    background-color: rgb(241, 241, 241);
+    color: rgb(97, 97, 97);
+    padding: 10px;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    transition: all, 0.2s;
+    width: 150px;
+}
+
+.bt-caixa {
+    background-color: rgb(140, 255, 155);
+    color: black;
+}
+
+.button:hover {
+    background-color: rgb(153, 153, 153);
+    color: rgb(241, 241, 241);
+    cursor: pointer;
+}
+
+.bt-caixa:hover {
+    background-color: rgb(0, 148, 20);
+    color: white;
+}
+
 #overlay {
     position: fixed;
     top: 0;
@@ -51,11 +86,68 @@ footer h3{
 }
 
 #container {
-    z-index: 20;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
     margin: 10px;
 }
 
-#container #caixa {
+#bt-div {
+    margin-bottom: 10px;
+}
+
+#sections-div {
+    padding: 15px;
+    height: 100%;
+    background-color: #ececec;
+    overflow: hidden;
+}
+
+#sections-div .section {
+    width: 25%;
+    height: 100%;
+    min-width: 275px;
+    background-color: #d4d4d4;
+    border-radius: 10px;
+}
+
+#sections-div .section h2 {
+    text-align: center;
+    padding: 10px;
+    background-color: #c4c4c4;
+    color: #4b4b4b;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+
+#sections-div .section .card {
+    padding: 10px;
+    margin: 10px;
+    height: 50px;
+    text-align: center;
+    background-color: #c4c4c4;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+#sections-div .section .card img {
+    background-color: #a7a7a7;
+    padding: 10px 5px;
+    transition: background-color 0.2s;
+}
+
+#sections-div .section .card img:hover {
+    background-color: #8b8b8b;
+    cursor: pointer;
+}
+
+#sections-div .section .card p {
+    font-size: 12pt;
+}
+
+#boxes-div .box {
     z-index: 30;
     width: 30%;
     padding: 20px;
@@ -70,45 +162,18 @@ footer h3{
     transition: opacity 0.2s, visibility 0.2s;
 }
 
-#container .button {
-    position: relative;
-    background-color: rgb(241, 241, 241);
-    color: rgb(97, 97, 97);
-    padding: 10px;
-    font-weight: bold;
-    border: none;
-    border-radius: 5px;
-    transition: all, 0.2s;
-}
-
-#container .bt-caixa {
-    background-color: rgb(140, 255, 155);
-    color: black;
-}
-
-#container .button:hover {
-    background-color: rgb(153, 153, 153);
-    color: rgb(241, 241, 241);
-    cursor: pointer;
-}
-
-#container .bt-caixa:hover {
-    background-color: rgb(0, 148, 20);
-    color: white;
-}
-
-#container .opt {
+#boxes-div .opt {
     margin: auto;
     text-align: center;
     margin-bottom: 20px;
     width: 80%;
 }
 
-#container .opt label {
+#boxes-div .opt label {
     font-weight: bold;
 }
 
-#container .opt input[type="text"] {
+#boxes-div .opt input[type="text"] {
     background-color: none;
     margin-top: 5px;
     border: none;
@@ -119,6 +184,14 @@ footer h3{
     font-size: 16pt;
     text-align: center;
     transition: all, 0.2s ease;
+}
+
+#boxes-div .opt .input-wrapper:focus-within::after {
+    transform: scaleX(1);
+}
+
+#boxes-div .opt-button {
+    margin-bottom: 0;
 }
 
 .input-wrapper {
@@ -138,11 +211,3 @@ footer h3{
     transform-origin: center;
     transition: transform 0.3s ease;
   }
-
-#container .opt .input-wrapper:focus-within::after {
-    transform: scaleX(1);
-}
-
-#container .opt-button {
-    margin-bottom: 0;
-}
