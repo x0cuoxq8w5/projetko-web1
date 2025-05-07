@@ -1,6 +1,7 @@
 *{
     margin: 0;
     padding: 0;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
 }
 
 header {
@@ -26,11 +27,51 @@ footer h3{
     line-height: 50px;
 }
 
+.hidden {
+    opacity: 0;
+    pointer-events: none;
+    visibility: hidden;
+}
+
+.visible {
+    opacity: 1;
+    pointer-events: auto;
+    visibility: visible;
+}
+
+#overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5);
+    transition: opacity 0.2s, visibility 0.2s;
+    z-index: 10;
+}
+
 #container {
+    z-index: 20;
     margin: 10px;
 }
 
+#container #caixa {
+    z-index: 30;
+    width: 30%;
+    padding: 20px;
+    position: absolute;
+    top: 25%;
+    left: 50%;
+    transform: translate(-50%);
+    background-color: #f0f0f0;
+    border: 2px solid #999;
+    border-radius: 10px;
+    margin-top: 10px;
+    transition: opacity 0.2s, visibility 0.2s;
+}
+
 #container .button {
+    position: relative;
     background-color: rgb(241, 241, 241);
     color: rgb(97, 97, 97);
     padding: 10px;
@@ -40,7 +81,68 @@ footer h3{
     transition: all, 0.2s;
 }
 
+#container .bt-caixa {
+    background-color: rgb(140, 255, 155);
+    color: black;
+}
+
 #container .button:hover {
     background-color: rgb(153, 153, 153);
     color: rgb(241, 241, 241);
+    cursor: pointer;
+}
+
+#container .bt-caixa:hover {
+    background-color: rgb(0, 148, 20);
+    color: white;
+}
+
+#container .opt {
+    margin: auto;
+    text-align: center;
+    margin-bottom: 20px;
+    width: 80%;
+}
+
+#container .opt label {
+    font-weight: bold;
+}
+
+#container .opt input[type="text"] {
+    background-color: none;
+    margin-top: 5px;
+    border: none;
+    outline: none;
+    background-color: #f0f0f0;
+    width: 100%;
+    height: 25px;
+    font-size: 16pt;
+    text-align: center;
+    transition: all, 0.2s ease;
+}
+
+.input-wrapper {
+    display: inline;
+    position: relative;
+}
+
+.input-wrapper::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    height: 2px;
+    width: 100%;
+    background-color: #000;
+    transform: scaleX(0.5);
+    transform-origin: center;
+    transition: transform 0.3s ease;
+  }
+
+#container .opt .input-wrapper:focus-within::after {
+    transform: scaleX(1);
+}
+
+#container .opt-button {
+    margin-bottom: 0;
 }
