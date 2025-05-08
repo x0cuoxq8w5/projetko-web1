@@ -162,6 +162,7 @@ footer h3{
     background-color: #a7a7a7;
     padding: 10px 5px;
     transition: background-color 0.2s;
+    height: 30px;
 }
 
 #sections-div .section .card img:hover {
@@ -171,6 +172,7 @@ footer h3{
 
 #sections-div .section .card p {
     font-size: 12pt;
+    width: 60%;
 }
 
 #boxes-div .box {

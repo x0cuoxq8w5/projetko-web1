@@ -20,13 +20,10 @@
         </div>
 
         <div id="sections-div">
-            <div class="section">
-                <h2>Nome</h2>
-                <button>Adicionar card +</button>
-            </div>
         </div>
         
         <div id="boxes-div">
+
             <div id="addSBox" class="box hidden">
                 <form id="addSForm">
                     <div class="opt">
@@ -40,6 +37,21 @@
                     <button class="button bt-caixa" onclick="addS()">Adicionar</button>
                 </div>
             </div>
+
+            <div id="addCBox" class="box hidden">
+                <form id="addCForm">
+                    <div class="opt">
+                        <label for="name">Card name:</label>
+                        <div class="input-wrapper">
+                            <input id="CardName" type="text" name="name">
+                        </div>
+                    </div>
+                </form>
+                <div class="opt opt-button">
+                    <button id="addCButton" class="button bt-caixa">Adicionar</button>
+                </div>
+            </div>
+
         </div>
 
     </div>
