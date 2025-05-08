@@ -3,11 +3,62 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Clone Trello</title>
+    <title>Cardeasy</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
-<body>
-    <h1>Hello, World!</h1>
+<body onload="updateAll()">
+    <header>
+        <h1>Cardeasy</h1>
+    </header>
+
+    <div id="container">
+
+        <div id="overlay" class="hidden" onclick="closeBoxes()"></div>
+
+        <div id="bt-div">
+            <button id="addSectionButton" class="button" onclick="addSection()">Adicionar Seção</button>
+        </div>
+
+        <div id="sections-div">
+        </div>
+        
+        <div id="boxes-div">
+
+            <div id="addSBox" class="box hidden">
+                <form id="addSForm">
+                    <div class="opt">
+                        <label for="name">Section name:</label>
+                        <div class="input-wrapper">
+                            <input id="SectionName" type="text" name="name">
+                        </div>
+                    </div>
+                </form>
+                <div class="opt opt-button">
+                    <button class="button bt-caixa" onclick="addS()">Adicionar</button>
+                </div>
+            </div>
+
+            <div id="addCBox" class="box hidden">
+                <form id="addCForm">
+                    <div class="opt">
+                        <label for="name">Card name:</label>
+                        <div class="input-wrapper">
+                            <input id="CardName" type="text" name="name">
+                        </div>
+                    </div>
+                </form>
+                <div class="opt opt-button">
+                    <button id="addCButton" class="button bt-caixa">Adicionar</button>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <footer>
+        <h3>Footer</h3>
+    </footer>
     <script src="js/script.js"></script>
 </body>
 </html>
