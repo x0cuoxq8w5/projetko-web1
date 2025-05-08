@@ -39,12 +39,15 @@ function updateAll() {
         sectionsDiv.innerHTML = "";
         for(i in sections){
             let section = sections[i];
-            const sectionDiv = document.createElement('div');
-            const sectionName = document.createElement('h2');
+            let sectionDiv = document.createElement('div');
+            let sectionName = document.createElement('h2');
+            let addCardButton = document.createElement('button');
+            addCardButton.innerHTML = 'Adicionar Card +'
             sectionName.innerHTML = section.name;
             sectionDiv.id = section.id;
             sectionDiv.className = 'section';
             sectionDiv.appendChild(sectionName);
+            sectionDiv.appendChild(addCardButton);
             sectionsDiv.appendChild(sectionDiv);
         }
     }

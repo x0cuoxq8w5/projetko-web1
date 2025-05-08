@@ -101,7 +101,6 @@ footer h3{
     padding: 15px;
     height: 100%;
     background-color: #ececec;
-    overflow: hidden;
     display: flex;
     flex-direction: row;
     overflow: auto;
@@ -114,6 +113,9 @@ footer h3{
     background-color: #d4d4d4;
     border-radius: 10px;
     margin-right: 15px;
+    overflow: auto;
+    display: flex;
+    flex-direction: column;
 }
 
 #sections-div .section h2 {
@@ -123,6 +125,26 @@ footer h3{
     color: #4b4b4b;
     border-top-left-radius: 10px;
     border-top-right-radius: 10px;
+}
+
+#sections-div .section button {
+    display: block;
+    border: none;
+    border-radius: 5px;
+    background-color: #c4c4c4;
+    color: #4b4b4b;
+    margin: 10px auto;
+    width: 50%;
+    height: 35px;
+    font-size: 12pt;
+    font-weight: bold;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+#sections-div .section button:hover {
+    background-color: #8b8b8b;
+    color: #ececec;
+    cursor: pointer;
 }
 
 #sections-div .section .card {
