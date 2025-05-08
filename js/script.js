@@ -24,6 +24,10 @@ function closeBoxes() {
 function addS() {
     hideBox(document.getElementById('addSBox'));
     const sectionName = document.getElementById('SectionName').value;
+    if(sectionName.trim() == "" || sectionName == null){
+        window.alert('Nome inválido!');
+        return;
+    }
     let sections = JSON.parse(localStorage.getItem('sections')) || [];
     let section = {
         id : sections.length,
@@ -38,6 +42,10 @@ function addS() {
 function addC(sectionId) {
     hideBox(document.getElementById('addCBox'));
     const cardName = document.getElementById('CardName').value;
+    if(cardName.trim() == "" || cardName == null){
+        window.alert('Nome inválido!');
+        return;
+    }
     let sections = JSON.parse(localStorage.getItem('sections')) || [];
     let card = {
         parentId : sectionId,
@@ -52,6 +60,8 @@ function addC(sectionId) {
 function updateAll() {
     const sectionsDiv = document.getElementById('sections-div');
     const sections = JSON.parse(localStorage.getItem('sections')) || [];
+    document.getElementById('SectionName').value = '';
+    document.getElementById('CardName').value = '';
     if(sections.length > 0){
         sectionsDiv.innerHTML = "";
         for(i in sections){
@@ -184,6 +194,12 @@ function findIdIndex(array, idObject) {
 }
 
 document.getElementById("addSForm").addEventListener("keydown", function(event) {
+    if (event.key === "Enter") {
+        event.preventDefault(); // Evita qualquer ação de envio ou outra
+    }
+});
+
+document.getElementById("addCForm").addEventListener("keydown", function(event) {
     if (event.key === "Enter") {
         event.preventDefault(); // Evita qualquer ação de envio ou outra
     }
