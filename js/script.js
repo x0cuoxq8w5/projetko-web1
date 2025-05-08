@@ -65,7 +65,7 @@ function updateAll() {
                 const caixaButton = document.getElementById('addCButton');
                 showBox(caixa);
                 caixaButton.onclick = () => {
-                    addC(e.target.parentElement.id);
+                    addC(parseInt(e.target.parentElement.id));
                 }
             });
             sectionName.innerHTML = section.name;
@@ -86,13 +86,37 @@ function updateAll() {
 
                 if(card.parentId == 0) {
                     rightArrow.src = '../images/arrow_right.png';
+                    rightArrow.addEventListener('click', (e) => {
+                        goRight(
+                            JSON.parse(localStorage.getItem('sections')),
+                            card
+                        );
+                    });
                     leftArrow.className = 'hidden';
                 } else if(card.parentId == (sections.length)-1) {
                     leftArrow.src = '../images/arrow_left.png';
+                    leftArrow.addEventListener('click', (e) => {
+                        goLeft(
+                            JSON.parse(localStorage.getItem('sections')),
+                            card
+                        );
+                    });
                     rightArrow.className = 'hidden';
                 } else {
                     rightArrow.src = '../images/arrow_right.png';
+                    rightArrow.addEventListener('click', (e) => {
+                        goRight(
+                            JSON.parse(localStorage.getItem('sections')),
+                            card
+                        );
+                    });
                     leftArrow.src = '../images/arrow_left.png';
+                    leftArrow.addEventListener('click', (e) => {
+                        goLeft(
+                            JSON.parse(localStorage.getItem('sections')),
+                            card
+                        );
+                    });
                 }
 
                 cardDiv.appendChild(leftArrow);
@@ -115,6 +139,60 @@ function showBox(box) {
 function hideBox(box) {
     box.classList.replace('visible', 'hidden');
     overlay.classList.replace('visible', 'hidden');
+}
+
+function goRight(sections, card) {
+    let sectionsAmount = sections.length;
+    console.log("entrou");
+    for(let s=0; s<sectionsAmount; s++){
+        let section = sections[s];
+        if(section.id === card.parentId){
+            console.log('ok para', section.name);
+            section.cards.splice(sections.indexOf(card), 1);
+            card.id = sections[s+1].cards.length;
+            card.parentId++;
+            sections[s+1].cards.push(card);
+            console.log('id', card.id);
+            console.log('atualizados', sections);
+            for(let c in sections[s+1].cards){
+                let card = sections[s+1].cards[c];
+                card.id = parseInt(c);
+            }
+            break;
+        }
+    }
+    localStorage.setItem('sections', JSON.stringify(sections));
+    updateAll();
+}
+
+function goLeft(sections, card){
+    let sectionsAmount = sections.length;
+    console.log("entrou");
+    for(let s=0; s<sectionsAmount; s++){
+        let section = sections[s];
+        if(section.id === card.parentId){
+            console.log('ok para', section.name);
+            section.cards.splice(sections.indexOf(card), 1);
+            card.id = sections[s-1].cards.length;
+            card.parentId--;
+            sections[s-1].cards.push(card);
+            console.log('id', card.id);
+            console.log('atualizados', sections)
+            for(let c in sections[s-1].cards){
+                let card = sections[s-1].cards[c];
+                card.id = parseInt(c);
+            }
+            break;
+        }
+    }
+    localStorage.setItem('sections', JSON.stringify(sections));
+    updateAll();
+}
+
+function reconfCards(section) {
+    for(let c in section.cards){
+        let card = section.card[c];
+    }
 }
 
 document.getElementById("addSForm").addEventListener("keydown", function(event) {
