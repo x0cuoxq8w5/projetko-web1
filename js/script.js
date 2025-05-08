@@ -96,7 +96,7 @@ function updateAll() {
 
                 if(sections.length > 1){
                     if(card.parentId == 0) {
-                        rightArrow.src = '../images/arrow_right.png' || '>';
+                        rightArrow.src = 'images/arrow_right.png' || '>';
                         rightArrow.addEventListener('click', (e) => {
                             goRight(
                                 JSON.parse(localStorage.getItem('sections')),
@@ -105,7 +105,7 @@ function updateAll() {
                         });
                         leftArrow.className = 'hidden';
                     } else if(card.parentId == (sections.length)-1) {
-                        leftArrow.src = '../images/arrow_left.png' || '<';
+                        leftArrow.src = 'images/arrow_left.png' || '<';
                         leftArrow.addEventListener('click', (e) => {
                             goLeft(
                                 JSON.parse(localStorage.getItem('sections')),
@@ -114,14 +114,14 @@ function updateAll() {
                         });
                         rightArrow.className = 'hidden';
                     } else {
-                        rightArrow.src = '../images/arrow_right.png' || '>';
+                        rightArrow.src = 'images/arrow_right.png' || '>';
                         rightArrow.addEventListener('click', (e) => {
                             goRight(
                                 JSON.parse(localStorage.getItem('sections')),
                                 card
                             );
                         });
-                        leftArrow.src = '../images/arrow_left.png' || '<';
+                        leftArrow.src = 'images/arrow_left.png' || '<';
                         leftArrow.addEventListener('click', (e) => {
                             goLeft(
                                 JSON.parse(localStorage.getItem('sections')),
