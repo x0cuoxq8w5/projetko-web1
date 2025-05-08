@@ -84,39 +84,44 @@ function updateAll() {
                 let rightArrow = document.createElement('img');
                 let leftArrow = document.createElement('img');
 
-                if(card.parentId == 0) {
-                    rightArrow.src = '../images/arrow_right.png';
-                    rightArrow.addEventListener('click', (e) => {
-                        goRight(
-                            JSON.parse(localStorage.getItem('sections')),
-                            card
-                        );
-                    });
-                    leftArrow.className = 'hidden';
-                } else if(card.parentId == (sections.length)-1) {
-                    leftArrow.src = '../images/arrow_left.png';
-                    leftArrow.addEventListener('click', (e) => {
-                        goLeft(
-                            JSON.parse(localStorage.getItem('sections')),
-                            card
-                        );
-                    });
-                    rightArrow.className = 'hidden';
+                if(sections.length > 1){
+                    if(card.parentId == 0) {
+                        rightArrow.src = '../images/arrow_right.png' || '>';
+                        rightArrow.addEventListener('click', (e) => {
+                            goRight(
+                                JSON.parse(localStorage.getItem('sections')),
+                                card
+                            );
+                        });
+                        leftArrow.className = 'hidden';
+                    } else if(card.parentId == (sections.length)-1) {
+                        leftArrow.src = '../images/arrow_left.png' || '<';
+                        leftArrow.addEventListener('click', (e) => {
+                            goLeft(
+                                JSON.parse(localStorage.getItem('sections')),
+                                card
+                            );
+                        });
+                        rightArrow.className = 'hidden';
+                    } else {
+                        rightArrow.src = '../images/arrow_right.png' || '>';
+                        rightArrow.addEventListener('click', (e) => {
+                            goRight(
+                                JSON.parse(localStorage.getItem('sections')),
+                                card
+                            );
+                        });
+                        leftArrow.src = '../images/arrow_left.png' || '<';
+                        leftArrow.addEventListener('click', (e) => {
+                            goLeft(
+                                JSON.parse(localStorage.getItem('sections')),
+                                card
+                            );
+                        });
+                    }
                 } else {
-                    rightArrow.src = '../images/arrow_right.png';
-                    rightArrow.addEventListener('click', (e) => {
-                        goRight(
-                            JSON.parse(localStorage.getItem('sections')),
-                            card
-                        );
-                    });
-                    leftArrow.src = '../images/arrow_left.png';
-                    leftArrow.addEventListener('click', (e) => {
-                        goLeft(
-                            JSON.parse(localStorage.getItem('sections')),
-                            card
-                        );
-                    });
+                    rightArrow.className = 'hidden';
+                    leftArrow.className = 'hidden';
                 }
 
                 cardDiv.appendChild(leftArrow);
@@ -143,21 +148,12 @@ function hideBox(box) {
 
 function goRight(sections, card) {
     let sectionsAmount = sections.length;
-    console.log("entrou");
     for(let s=0; s<sectionsAmount; s++){
         let section = sections[s];
         if(section.id === card.parentId){
-            console.log('ok para', section.name);
-            section.cards.splice(sections.indexOf(card), 1);
-            card.id = sections[s+1].cards.length;
+            section.cards.splice(findIdIndex(section.cards, card), 1);
             card.parentId++;
             sections[s+1].cards.push(card);
-            console.log('id', card.id);
-            console.log('atualizados', sections);
-            for(let c in sections[s+1].cards){
-                let card = sections[s+1].cards[c];
-                card.id = parseInt(c);
-            }
             break;
         }
     }
@@ -167,21 +163,12 @@ function goRight(sections, card) {
 
 function goLeft(sections, card){
     let sectionsAmount = sections.length;
-    console.log("entrou");
     for(let s=0; s<sectionsAmount; s++){
         let section = sections[s];
         if(section.id === card.parentId){
-            console.log('ok para', section.name);
-            section.cards.splice(sections.indexOf(card), 1);
-            card.id = sections[s-1].cards.length;
+            section.cards.splice(findIdIndex(section.cards, card), 1);
             card.parentId--;
             sections[s-1].cards.push(card);
-            console.log('id', card.id);
-            console.log('atualizados', sections)
-            for(let c in sections[s-1].cards){
-                let card = sections[s-1].cards[c];
-                card.id = parseInt(c);
-            }
             break;
         }
     }
@@ -189,9 +176,10 @@ function goLeft(sections, card){
     updateAll();
 }
 
-function reconfCards(section) {
-    for(let c in section.cards){
-        let card = section.card[c];
+function findIdIndex(array, idObject) {
+    for(i in array) {
+        let object = array[i];
+        if(object.id == idObject.id) return parseInt(i);
     }
 }
 
