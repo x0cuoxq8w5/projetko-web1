@@ -29,11 +29,25 @@ function addS() {
     }
     sections.push(section);
     localStorage.setItem('sections', JSON.stringify(sections));
-    
+    updateAll();
 }
 
 function updateAll() {
-    
+    const sectionsDiv = document.getElementById('sections-div');
+    const sections = JSON.parse(localStorage.getItem('sections')) || [];
+    if(sections.length > 0){
+        sectionsDiv.innerHTML = "";
+        for(i in sections){
+            let section = sections[i];
+            const sectionDiv = document.createElement('div');
+            const sectionName = document.createElement('h2');
+            sectionName.innerHTML = section.name;
+            sectionDiv.id = section.id;
+            sectionDiv.className = 'section';
+            sectionDiv.appendChild(sectionName);
+            sectionsDiv.appendChild(sectionDiv);
+        }
+    }
 }
 
 document.getElementById("addSForm").addEventListener("keydown", function(event) {
