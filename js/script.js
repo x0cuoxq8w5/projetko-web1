@@ -69,15 +69,38 @@ function addC(sectionId) {
         return;
     }
     let sections = JSON.parse(localStorage.getItem('sections')) || [];
-    let cardId = JSON.parse(localStorage.getItem('IDc')) || 0;
-    let card = {
-        parentId : sectionId,
-        id : cardId++,
-        name : cardName
+    let freeIdArray = JSON.parse(localStorage.getItem('IDcFree')) || [];
+    let card;
+    if(freeIdArray.length !== 0){
+        let freeId = freeIdArray.pop();
+        card = {
+            parentId : sectionId,
+            id : freeId,
+            name: cardName
+        }
+        localStorage.setItem('IDcFree', JSON.stringify(freeIdArray));
+    } else{
+        let cardId = JSON.parse(localStorage.getItem('IDc')) || 0;
+        card = {
+            parentId : sectionId,
+            id : cardId++,
+            name : cardName
+        }
+        localStorage.setItem('IDc', JSON.stringify(cardId));
     }
     sections[sectionId].cards.push(card);
     localStorage.setItem('sections', JSON.stringify(sections));
-    localStorage.setItem('IDc', JSON.stringify(cardId));
+    updateAll();
+}
+
+function delC(parentSectionId, card){
+    let sections = JSON.parse(localStorage.getItem('sections')) || [];
+    let idFree = JSON.parse(localStorage.getItem('IDcFree')) || [];
+    if(!sections[parentSectionId]) return;
+    sections[parentSectionId].cards = sections[parentSectionId].cards.filter(x => x.id !== card.id);
+    idFree.push(card.id);
+    localStorage.setItem('sections', JSON.stringify(sections));
+    localStorage.setItem('IDcFree', JSON.stringify(idFree));
     updateAll();
 }
 
@@ -114,6 +137,17 @@ function updateAll() {
                 let cardName = document.createElement('p');
                 cardDiv.className = 'card';
                 cardName.innerHTML = card.name;
+
+                let delButton = document.createElement('button');
+                let editButton = document.createElement('button');
+                delButton.className = 'side-bt delete';
+                delButton.innerHTML = 'Del';
+                editButton.className = 'side-bt edit';
+                editButton.innerHTML = 'Edit';
+
+                delButton.addEventListener('click', (e) =>{
+                    delC(card.parentId, card);
+                });
 
                 let rightArrow = document.createElement('img');
                 let leftArrow = document.createElement('img');
@@ -161,6 +195,8 @@ function updateAll() {
                 cardDiv.appendChild(leftArrow);
                 cardDiv.appendChild(cardName);
                 cardDiv.appendChild(rightArrow);
+                cardDiv.appendChild(delButton);
+                cardDiv.appendChild(editButton);
                 sectionDiv.appendChild(cardDiv);
             }
 
