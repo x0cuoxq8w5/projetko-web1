@@ -1,4 +1,24 @@
+// PARA EU VER NO FUTURO, O PROBLEMA Q VOU RESOLVER É:
+// AJEITAR A ORGANIZAÇÃO DOS IDs (OU EU FAÇO OS IDS SE ORGANIZAREM TODA
+// VEZ QUE UMA AÇÃO É FEITA, OU EU SÓ CRIO NO LOCALSTORAGE UM ID FIXO.
+// PENSEI TAMBÉM EM FAZER UMA KEY NO LOCALSOTRAGE QUE GUARDA O ÚLTIMO
+// ID EXISTENTE E, SE UM CARD FOR DELETADO, ESSE ID FICA RESERVADO EM
+// UMA KEY DE "IDs LIBERADOS". ESSA IDEIA AINDA ESTÁ EM STANDBY)
+
 const overlay = document.getElementById('overlay');
+
+function ini(){
+    updateAll();
+    if(JSON.parse(localStorage.getItem("IDc")) === null){
+        localStorage.setItem("IDc", JSON.stringify(0));
+    }
+    if(JSON.parse(localStorage.getItem("IDcFree")) === null){
+        localStorage.setItem("IDcFree", JSON.stringify([]));
+    }
+    if(JSON.parse(localStorage.getItem("IDs")) === null){
+        localStorage.setItem("IDs", JSON.stringify(0));
+    }
+}
 
 function addSection() {
     const caixa = document.getElementById('addSBox');
@@ -29,13 +49,15 @@ function addS() {
         return;
     }
     let sections = JSON.parse(localStorage.getItem('sections')) || [];
+    let sectionId = JSON.parse(localStorage.getItem('IDs')) || 0;
     let section = {
-        id : sections.length,
+        id : sectionId++,
         name : sectionName,
         cards : []
     }
     sections.push(section);
     localStorage.setItem('sections', JSON.stringify(sections));
+    localStorage.setItem('IDs', JSON.stringify(sectionId));
     updateAll();
 }
 
@@ -47,13 +69,15 @@ function addC(sectionId) {
         return;
     }
     let sections = JSON.parse(localStorage.getItem('sections')) || [];
+    let cardId = JSON.parse(localStorage.getItem('IDc')) || 0;
     let card = {
         parentId : sectionId,
-        id : sections[sectionId].cards.length,
+        id : cardId++,
         name : cardName
     }
     sections[sectionId].cards.push(card);
     localStorage.setItem('sections', JSON.stringify(sections));
+    localStorage.setItem('IDc', JSON.stringify(cardId));
     updateAll();
 }
 
