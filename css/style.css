@@ -213,8 +213,8 @@ footer h3{
 #boxes-div .box {
     z-index: 30;
     width: 30%;
-    min-width: 200px;
-    max-width: 300px;
+    min-width: 300px;
+    max-width: 450px;
     padding: 20px;
     position: absolute;
     top: 25%;
@@ -222,7 +222,7 @@ footer h3{
     transform: translate(-50%);
     background-color: #f0f0f0;
     border: 2px solid #999;
-    border-radius: 10px;
+    border-radius: 5px;
     margin-top: 10px;
     transition: opacity 0.2s, visibility 0.2s;
 }
@@ -232,13 +232,10 @@ footer h3{
     text-align: center;
     margin-bottom: 20px;
     width: 80%;
-}
-
-#boxes-div .opt label {
     font-weight: bold;
 }
 
-#boxes-div .opt input[type="text"] {
+#boxes-div .name input[type="text"] {
     background-color: none;
     margin-top: 5px;
     border: none;
@@ -251,8 +248,48 @@ footer h3{
     transition: all, 0.2s ease;
 }
 
-#boxes-div .opt .input-wrapper:focus-within::after {
+#boxes-div .name .input-wrapper:focus-within::after {
     transform: scaleX(1);
+}
+
+#boxes-div .desc textarea {
+    background-color: #ffffff;
+    border: none;
+    border-radius: 10px;
+    margin-top: 10px;
+    height: 100px;
+    width: 90%;
+    font-size: 12px;
+    resize: none;
+    padding: 7px;
+    box-shadow: inset 0px 0px 3px rgba(0, 0, 0, 0.5);
+}
+
+#boxes-div .desc textarea:focus {
+    outline: none;
+}
+
+#boxes-div .color .colors {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-content: center;
+    height: 100px;
+}
+
+#boxes-div .color .c-option {
+    width: 30px;
+    height: 20px;
+    min-width: 30px;
+    display: block;
+    border-radius: 5px;
+    margin: 5px;
+}
+
+#boxes-div .color .c-option:hover {
+    filter: brightness(83%);
+    cursor: pointer;
 }
 
 #boxes-div .opt-button {
@@ -264,12 +301,12 @@ footer h3{
     max-width: 100px;
 }
 
-.input-wrapper {
+.name .input-wrapper {
     display: inline;
     position: relative;
 }
 
-.input-wrapper::after {
+.name .input-wrapper::after {
     content: '';
     position: absolute;
     bottom: -5px;
@@ -280,4 +317,64 @@ footer h3{
     transform: scaleX(0.5);
     transform-origin: center;
     transition: transform 0.3s ease;
-  }
+}
+
+#purple {
+    background-color: #c97efd;
+    border: 2px solid #ae3cff;
+}
+
+#red {
+    background-color: #ff7d7d;
+    border: 2px solid #ec4f4f;
+}
+
+#yellow {
+    background-color: #f4ef8e;
+    border: 2px solid #e6df60;
+}
+
+#orange {
+    background-color: #ffd180;
+    border: 2px solid #f0b54e;
+}
+
+#blue {
+    background-color: #67c1fd;
+    border: 2px solid #399adb;
+}
+
+#pink {
+    background-color: #ffa6fb;
+    border: 2px solid #ee65e7;
+}
+
+#green {
+    background-color: #93ff98;
+    border: 2px solid #5be662;
+}
+
+#brown {
+    background-color: #eda468;
+    border: 2px solid #da8d4e;
+}
+
+#cyan {
+    background-color: #6efbff;
+    border: 2px solid #43cfd3;
+}
+
+#grey {
+    background-color: #d5d5d5;
+    border: 2px solid #a7a7a7;
+}
+
+#golden {
+    background: linear-gradient(125deg, #ffe96c, #d3b923);
+    border: 2px solid #bfa724;
+}
+
+#silver {
+    background: linear-gradient(125deg, #dadada, #aaaaaa);
+    border: 2px solid #747474;
+}
