@@ -220,8 +220,8 @@ footer h3{
     top: 25%;
     left: 50%;
     transform: translate(-50%);
-    background-color: #d5d5d5;
-    border: 2px solid #a7a7a7;
+    background-color: #d6d6d6;
+    border: 2px solid #a0a0a0;
     border-radius: 30px;
     margin-top: 10px;
     transition: opacity 0.2s, visibility 0.2s;
@@ -321,51 +321,101 @@ footer h3{
 }
 
 #purple {
-    background-color: #c97efd;
-    border: 2px solid #ae3cff;
+    background-color: #faa4ff;
+    border: 2px solid #de81e3;
 }
 
 #red {
-    background-color: #ff7d7d;
-    border: 2px solid #ec4f4f;
+    background-color: #ffa4a4;
+    border: 2px solid #d98181;
 }
 
 #yellow {
-    background-color: #f4ef8e;
-    border: 2px solid #e6df60;
+    background-color: #fffca4;
+    border: 2px solid #d9d682;
 }
 
 #orange {
-    background-color: #ffd180;
-    border: 2px solid #f0b54e;
+    background-color: #ffcfa4;
+    border: 2px solid #daab82;
 }
 
 #blue {
-    background-color: #67c1fd;
-    border: 2px solid #399adb;
+    background-color: #a4b3ff;
+    border: 2px solid #7b8ad2;
 }
 
 #pink {
-    background-color: #ffa6fb;
-    border: 2px solid #ee65e7;
+    background-color: #ffa4fa;
+    border: 2px solid #e084dc;
 }
 
 #green {
-    background-color: #93ff98;
-    border: 2px solid #5be662;
+    background-color: #d1ffa4;
+    border: 2px solid #add881;
 }
 
 #brown {
-    background-color: #eda468;
-    border: 2px solid #da8d4e;
+    background-color: #ffd7a4;
+    border: 2px solid #d5b285;
 }
 
 #cyan {
-    background-color: #6efbff;
-    border: 2px solid #43cfd3;
+    background-color: #a4fffa;
+    border: 2px solid #82d3cf;
 }
 
 #grey {
-    background-color: #d5d5d5;
-    border: 2px solid #a7a7a7;
+    background-color: #d6d6d6;
+    border: 2px solid #adadad;
+}
+
+#s_purple {
+    background-color: #c622f5;
+    border: 2px solid #a41cc9;
+}
+
+#s_red {
+    background-color: #f52222;
+    border: 2px solid #d81717;
+}
+
+#s_yellow {
+    background-color: #f5e422;
+    border: 2px solid #d8c818;
+}
+
+#s_orange {
+    background-color: #f59422;
+    border: 2px solid #d7801d;
+}
+
+#s_blue {
+    background-color: #2245f5;
+    border: 2px solid #1736d1;
+}
+
+#s_pink {
+    background-color: #f522d5;
+    border: 2px solid #d31bb8;
+}
+
+#s_green {
+    background-color: #4ff522;
+    border: 2px solid #3fd017;
+}
+
+#s_brown {
+    background-color: #f59422;
+    border: 2px solid #cc791b;
+}
+
+#s_cyan {
+    background-color: #22f3f5;
+    border: 2px solid #15cbce;
+}
+
+#s_grey {
+    background-color: #a0a0a0;
+    border: 2px solid #818181;
 }

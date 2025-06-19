@@ -8,28 +8,26 @@
 const overlay = document.getElementById('overlay');
 
 const colors = {
-    purple : "#c97efd",
-    red : "#ff7d7d",
-    yellow : "#f4ef8e",
-    orange : "#ffd180",
-    blue : "#67c1fd",
-    pink : "#ffa6fb",
-    green : "#93ff98",
-    brown : "#eda468",
-    cyan : "#6efbff",
-    grey : "#d5d5d5",
-    golden : {
-        rotation : 125,
-        topcolor : "#ffe96c",
-        botcolor : "#d3b923",
-        base : "#f2d94e"
-    },
-    silver : {
-        rotation : 125,
-        topcolor : "#dadada",
-        botcolor : "#aaaaaa",
-        base : "#cecece"
-    }
+    purple : "#faa4ff",
+    red : "#ffa4a4",
+    yellow : "#fffca4",
+    orange : "#ffcfa4",
+    blue : "#a4b3ff",
+    pink : "#ffa4fa",
+    green : "#d1ffa4",
+    brown : "#ffd7a4",
+    cyan : "#a4fffa",
+    grey : "#d6d6d6",
+    s_purple: "#c622f5",
+    s_red: "#f52222",
+    s_yellow: "#f5e422",
+    s_orange: "#f59422",
+    s_blue: "#2245f5",
+    s_pink: "#f522d5",
+    s_green: "#4ff522",
+    s_brown: "#f59422",
+    s_cyan: "#22f3f5",
+    s_grey: "#a0a0a0"
 }
 
 function ini(){
@@ -68,6 +66,7 @@ function closeBoxes() {
 
 function addS() {
     hideBox(document.getElementById('addSBox'));
+    const sectionBoxBGColor = getComputedStyle(document.getElementById('addSBox')).backgroundColor;
     const sectionName = document.getElementById('SectionName').value;
     if(sectionName.trim() == "" || sectionName == null){
         window.alert('Nome inválido!');
@@ -78,6 +77,7 @@ function addS() {
     let section = {
         id : sectionId++,
         name : sectionName,
+        color : sectionBoxBGColor,
         cards : []
     }
     sections.push(section);
@@ -137,6 +137,7 @@ function updateAll() {
         for(i in sections){
             let section = sections[i];
             let sectionDiv = document.createElement('div');
+            sectionDiv.style.backgroundColor = section.color;
             let sectionName = document.createElement('h2');
             let addCardButton = document.createElement('button');
             addCardButton.innerHTML = 'Adicionar Card +';
@@ -163,7 +164,7 @@ function updateAll() {
                 cardDiv.style.backgroundColor = card.color;
 
                 let hexColor = rgbStringToHex(card.color);
-                let darkColor = shadeColor(hexColor, -8);
+                let darkColor = shadeColor(hexColor, 0);
                 let veryDarkColor = shadeColor(hexColor, -15);
                 let delButton = document.createElement('button');
                 let editButton = document.createElement('button');
@@ -277,13 +278,20 @@ function goLeft(sections, card) {
     updateAll();
 }
 
-function selectColor(color) {
+function selectCColor(color) {
     let addCBox = document.getElementById("addCBox");
     let nameBox = document.getElementById("CardName");
     let descBox = document.getElementById('CardDesc');
     addCBox.style.backgroundColor = colors[color];
     nameBox.style.backgroundColor = colors[color];
     descBox.style.backgroundColor = shadeColor(colors[color], 30);
+}
+
+function selectSColor(color) {
+    let addSBox = document.getElementById("addSBox");
+    let nameBox = document.getElementById("SectionName");
+    addSBox.style.backgroundColor = colors[color];
+    nameBox.style.backgroundColor = colors[color];
 }
 
 function findIdIndex(array, idObject) {

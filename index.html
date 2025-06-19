@@ -46,10 +46,25 @@
 
             <div id="addSBox" class="box hidden">
                 <form id="addSForm">
-                    <div class="opt">
+                    <div class="opt name">
                         <label for="name">Nome da seção:</label>
                         <div class="input-wrapper">
                             <input id="SectionName" type="text" name="name">
+                        </div>
+                    </div>
+                    <div class="opt color">
+                        <label for="color">Cor:</label>
+                        <div class="colors">
+                            <span class="c-option" id="s_purple" onclick="selectSColor('s_purple')"></span>
+                            <span class="c-option" id="s_red" onclick="selectSColor('s_red')"></span>
+                            <span class="c-option" id="s_yellow" onclick="selectSColor('s_yellow')"></span>
+                            <span class="c-option" id="s_orange" onclick="selectSColor('s_orange')"></span>
+                            <span class="c-option" id="s_blue" onclick="selectSColor('s_blue')"></span>
+                            <span class="c-option" id="s_pink" onclick="selectSColor('s_pink')"></span>
+                            <span class="c-option" id="s_green" onclick="selectSColor('s_green')"></span>
+                            <span class="c-option" id="s_brown" onclick="selectSColor('s_brown')"></span>
+                            <span class="c-option" id="s_cyan" onclick="selectSColor('s_cyan')"></span>
+                            <span class="c-option" id="s_grey" onclick="selectSColor('s_grey')"></span>
                         </div>
                     </div>
                 </form>
@@ -73,16 +88,16 @@
                     <div class="opt color">
                         <label for="color">Cor:</label>
                         <div class="colors">
-                            <span class="c-option" id="purple" onclick="selectColor('purple')"></span>
-                            <span class="c-option" id="red" onclick="selectColor('red')"></span>
-                            <span class="c-option" id="yellow" onclick="selectColor('yellow')"></span>
-                            <span class="c-option" id="orange" onclick="selectColor('orange')"></span>
-                            <span class="c-option" id="blue" onclick="selectColor('blue')"></span>
-                            <span class="c-option" id="pink" onclick="selectColor('pink')"></span>
-                            <span class="c-option" id="green" onclick="selectColor('green')"></span>
-                            <span class="c-option" id="brown" onclick="selectColor('brown')"></span>
-                            <span class="c-option" id="cyan" onclick="selectColor('cyan')"></span>
-                            <span class="c-option" id="grey" onclick="selectColor('grey')"></span>
+                            <span class="c-option" id="purple" onclick="selectCColor('purple')"></span>
+                            <span class="c-option" id="red" onclick="selectCColor('red')"></span>
+                            <span class="c-option" id="yellow" onclick="selectCColor('yellow')"></span>
+                            <span class="c-option" id="orange" onclick="selectCColor('orange')"></span>
+                            <span class="c-option" id="blue" onclick="selectCColor('blue')"></span>
+                            <span class="c-option" id="pink" onclick="selectCColor('pink')"></span>
+                            <span class="c-option" id="green" onclick="selectCColor('green')"></span>
+                            <span class="c-option" id="brown" onclick="selectCColor('brown')"></span>
+                            <span class="c-option" id="cyan" onclick="selectCColor('cyan')"></span>
+                            <span class="c-option" id="grey" onclick="selectCColor('grey')"></span>
                         </div>
                     </div>
                 </form>
