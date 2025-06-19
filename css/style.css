@@ -220,8 +220,8 @@ footer h3{
     top: 25%;
     left: 50%;
     transform: translate(-50%);
-    background-color: #f0f0f0;
-    border: 2px solid #999;
+    background-color: #d5d5d5;
+    border: 2px solid #a7a7a7;
     border-radius: 30px;
     margin-top: 10px;
     transition: opacity 0.2s, visibility 0.2s;
@@ -240,7 +240,7 @@ footer h3{
     margin-top: 5px;
     border: none;
     outline: none;
-    background-color: #f0f0f0;
+    background-color: #d5d5d5;
     width: 100%;
     height: 25px;
     font-size: 16pt;
@@ -368,14 +368,4 @@ footer h3{
 #grey {
     background-color: #d5d5d5;
     border: 2px solid #a7a7a7;
-}
-
-#golden {
-    background: linear-gradient(125deg, #ffe96c, #d3b923);
-    border: 2px solid #bfa724;
-}
-
-#silver {
-    background: linear-gradient(125deg, #dadada, #aaaaaa);
-    border: 2px solid #747474;
 }
