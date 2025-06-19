@@ -7,6 +7,31 @@
 
 const overlay = document.getElementById('overlay');
 
+const colors = {
+    purple : "#c97efd",
+    red : "#ff7d7d",
+    yellow : "#f4ef8e",
+    orange : "#ffd180",
+    blue : "#67c1fd",
+    pink : "#ffa6fb",
+    green : "#93ff98",
+    brown : "#eda468",
+    cyan : "#6efbff",
+    grey : "#d5d5d5",
+    golden : {
+        rotation : 125,
+        topcolor : "#ffe96c",
+        botcolor : "#d3b923",
+        base : "#f2d94e"
+    },
+    silver : {
+        rotation : 125,
+        topcolor : "#dadada",
+        botcolor : "#aaaaaa",
+        base : "#cecece"
+    }
+}
+
 function ini(){
     updateAll();
     if(JSON.parse(localStorage.getItem("IDc")) === null){
@@ -63,6 +88,7 @@ function addS() {
 
 function addC(sectionId) {
     hideBox(document.getElementById('addCBox'));
+    const cardBoxBGColor = getComputedStyle(document.getElementById('addCBox')).backgroundColor;
     const cardName = document.getElementById('CardName').value;
     if(cardName.trim() == "" || cardName == null){
         window.alert('Nome inválido!');
@@ -70,22 +96,19 @@ function addC(sectionId) {
     }
     let sections = JSON.parse(localStorage.getItem('sections')) || [];
     let freeIdArray = JSON.parse(localStorage.getItem('IDcFree')) || [];
-    let card;
+    let card = {
+            parentId : sectionId,
+            id : 0,
+            name: cardName,
+            color: cardBoxBGColor
+        };
     if(freeIdArray.length !== 0){
         let freeId = freeIdArray.pop();
-        card = {
-            parentId : sectionId,
-            id : freeId,
-            name: cardName
-        }
+        card.id = freeId;
         localStorage.setItem('IDcFree', JSON.stringify(freeIdArray));
     } else{
         let cardId = JSON.parse(localStorage.getItem('IDc')) || 0;
-        card = {
-            parentId : sectionId,
-            id : cardId++,
-            name : cardName
-        }
+        card.id = cardId++;
         localStorage.setItem('IDc', JSON.stringify(cardId));
     }
     sections[sectionId].cards.push(card);
@@ -137,13 +160,19 @@ function updateAll() {
                 let cardName = document.createElement('p');
                 cardDiv.className = 'card';
                 cardName.innerHTML = card.name;
+                cardDiv.style.backgroundColor = card.color;
 
+                let hexColor = rgbStringToHex(card.color);
+                let darkColor = shadeColor(hexColor, -8);
+                let veryDarkColor = shadeColor(hexColor, -15);
                 let delButton = document.createElement('button');
                 let editButton = document.createElement('button');
                 delButton.className = 'side-bt delete';
                 delButton.innerHTML = 'Del';
+                delButton.style.backgroundColor = darkColor;
                 editButton.className = 'side-bt edit';
                 editButton.innerHTML = 'Edit';
+                editButton.style.backgroundColor = darkColor;
 
                 delButton.addEventListener('click', (e) =>{
                     delC(card.parentId, card);
@@ -151,6 +180,8 @@ function updateAll() {
 
                 let rightArrow = document.createElement('img');
                 let leftArrow = document.createElement('img');
+                rightArrow.style.backgroundColor = veryDarkColor;
+                leftArrow.style.backgroundColor = veryDarkColor;
 
                 if(sections.length > 1){
                     if(card.parentId == 0) {
@@ -231,7 +262,7 @@ function goRight(sections, card) {
     updateAll();
 }
 
-function goLeft(sections, card){
+function goLeft(sections, card) {
     let sectionsAmount = sections.length;
     for(let s=0; s<sectionsAmount; s++){
         let section = sections[s];
@@ -246,11 +277,53 @@ function goLeft(sections, card){
     updateAll();
 }
 
+function selectColor(color) {
+    let addCBox = document.getElementById("addCBox");
+    let nameBox = document.getElementById("CardName");
+    let descBox = document.getElementById('CardDesc');
+    addCBox.style.backgroundColor = colors[color];
+    nameBox.style.backgroundColor = colors[color];
+    descBox.style.backgroundColor = shadeColor(colors[color], 30);
+}
+
 function findIdIndex(array, idObject) {
     for(i in array) {
         let object = array[i];
         if(object.id == idObject.id) return parseInt(i);
     }
+}
+
+function shadeColor(hex, percent) {
+    hex = hex.replace(/^#/, '');
+
+    let r = parseInt(hex.substring(0, 2), 16);
+    let g = parseInt(hex.substring(2, 4), 16);
+    let b = parseInt(hex.substring(4, 6), 16);
+
+    r = Math.min(255, Math.max(0, r + (r * percent / 100)));
+    g = Math.min(255, Math.max(0, g + (g * percent / 100)));
+    b = Math.min(255, Math.max(0, b + (b * percent / 100)));
+
+    return '#' +
+        Math.round(r).toString(16).padStart(2, '0') +
+        Math.round(g).toString(16).padStart(2, '0') +
+        Math.round(b).toString(16).padStart(2, '0');
+}
+
+function rgbToHex(r, g, b) {
+    return (
+        "#" +
+        [r, g, b]
+            .map(valor => valor.toString(16).padStart(2, "0"))
+            .join("")
+    );
+}
+
+function rgbStringToHex(rgbString) {
+    const [r, g, b] = rgbString
+        .match(/\d+/g)
+        .map(Number);
+    return rgbToHex(r, g, b);
 }
 
 document.getElementById("addSForm").addEventListener("keydown", function(event) {
