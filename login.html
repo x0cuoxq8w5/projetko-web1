@@ -3,12 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <title>Cardeasy - Login</title>
+  <link rel="stylesheet" href="css/style.css">
 </head>
-<body id="body">
-<div id="login">
-  <label for="email">Email: </label><input id="email" type="text"> <br>
-  <label for="password">Senha: </label><input id="password" type="text"> <br>
-  <button id="submit" type="button" onclick="submitForm()">Login</button>
+<body id="body" class="formpage">
+<div id="login" class="formdiv">
+  <div class="formsubdiv"><label for="email" class="forminputlabel">Email: </label><input id="email" type="text" class="forminput"> <br></div>
+  <div class="formsubdiv"><label for="password" class="forminputlabel">Senha: </label><input id="password" type="text" class="forminput"> <br></div>
+  <button id="submit" type="button" onclick="submitForm()" class="submitbutton">Login</button>
 </div>
 <script src="js/script.js"></script>
 <script>
