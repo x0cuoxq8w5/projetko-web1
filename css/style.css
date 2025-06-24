@@ -109,13 +109,14 @@ footer h3{
 #sections-div .section {
     width: 25%;
     height: 100%;
-    min-width: 275px;
+    min-width: 325px;
     background-color: #d4d4d4;
     border-radius: 10px;
     margin-right: 15px;
     overflow: auto;
     display: flex;
     flex-direction: column;
+    position: relative;
 }
 
 #sections-div .section h2 {
@@ -147,18 +148,47 @@ footer h3{
     cursor: pointer;
 }
 
+#sections-div .section button.del {
+    background-color: #6a6a6a;
+    color: white;
+    width: 20px;
+    height: 20px;
+    border-radius: 20px;
+    line-height: 20px;
+    position: absolute;
+    right: 10px;
+    top: 0px;
+    transition: outline 0.05s;
+}
+
+#sections-div .section button.del:hover {
+    outline: 2px solid white;
+}
+
 #sections-div .section .card {
     padding: 10px;
-    margin: 10px;
+    margin: 22px 20px 0 20px;
     height: 50px;
     text-align: center;
     background-color: #c4c4c4;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    position: relative;
+}
+
+#sections-div .section .card .card-click {
+    height: 100%;
+    top: 0;
+    position: absolute;
+}
+
+#sections-div .section .card .card-click:hover {
+    cursor: pointer;
 }
 
 #sections-div .section .card img {
+    margin: 0 5px;
     background-color: #a7a7a7;
     padding: 10px 5px;
     transition: background-color 0.2s;
@@ -175,19 +205,100 @@ footer h3{
     width: 60%;
 }
 
+#sections-div .section .card .side-bt{
+    width: 50px;
+    height: 15px;
+    font-size: 8pt;
+    background-color: #b4b4b4;
+    position: absolute;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+#sections-div .section .card .delete{
+    border-right: 1px solid #8b8b8b;
+    right: 50px;
+    top: -25px;
+    border-radius: 5px 0 0 0;
+}
+
+#sections-div .section .card .edit{
+    border-left: 1px solid #8b8b8b;
+    right: 0;
+    top: -25px;
+    border-radius: 0 5px 0 0;
+}
+
+#sections-div .section .card .delete:hover{
+    background-color: #f14e4e;
+    color: white;
+}
+
+#sections-div .section .card .edit:hover{
+    background-color: #49a1e1;
+    color: white;
+}
+
 #boxes-div .box {
     z-index: 30;
     width: 30%;
+    min-width: 300px;
+    max-width: 450px;
     padding: 20px;
     position: absolute;
     top: 25%;
     left: 50%;
     transform: translate(-50%);
-    background-color: #f0f0f0;
-    border: 2px solid #999;
-    border-radius: 10px;
+    background-color: #d6d6d6;
+    border: 2px solid #a0a0a0;
+    border-radius: 30px;
     margin-top: 10px;
     transition: opacity 0.2s, visibility 0.2s;
+}
+
+#boxes-div .box .close-bt {
+    background-color: #ababab;
+    border: none;
+    border-radius: 20px;
+    width: 20px;
+    height: 20px;
+    line-height: 20px;
+    text-align: center;
+    position: absolute;
+    right: 20px;
+    top: 10px;
+    transition: outline 0.1s, color 0.1s;
+} 
+
+#boxes-div .box .close-bt:hover {
+    outline: 2px solid white;
+    color: white;
+    cursor: pointer;
+}
+
+#boxes-div .card {
+    width: 50%;
+}
+
+#boxes-div .card h2 {
+    font-size: 30px;
+    text-align: center;
+}
+
+#boxes-div .card p {
+    width: 90%;
+    margin: 10px auto;
+    background-color: #ececec;
+    padding: 5px 10px;
+    border-radius: 5px;
+}
+
+#boxes-div #cardBoxInfos .date {
+    background: none;
+    text-align: center;
+    padding: 5px;
+    font-size: 12px;
+    position: absolute;
+    bottom: -10px;
 }
 
 #boxes-div .opt {
@@ -195,18 +306,15 @@ footer h3{
     text-align: center;
     margin-bottom: 20px;
     width: 80%;
-}
-
-#boxes-div .opt label {
     font-weight: bold;
 }
 
-#boxes-div .opt input[type="text"] {
+#boxes-div .name input[type="text"] {
     background-color: none;
     margin-top: 5px;
     border: none;
     outline: none;
-    background-color: #f0f0f0;
+    background-color: #d5d5d5;
     width: 100%;
     height: 25px;
     font-size: 16pt;
@@ -214,20 +322,66 @@ footer h3{
     transition: all, 0.2s ease;
 }
 
-#boxes-div .opt .input-wrapper:focus-within::after {
+#boxes-div .name .input-wrapper:focus-within::after {
     transform: scaleX(1);
+}
+
+#boxes-div .desc textarea {
+    background-color: #ffffff;
+    border: none;
+    border-radius: 10px;
+    margin-top: 10px;
+    height: 100px;
+    width: 90%;
+    font-size: 12px;
+    resize: none;
+    padding: 7px;
+    box-shadow: inset 0px 0px 3px rgba(0, 0, 0, 0.5);
+}
+
+#boxes-div .desc textarea:focus {
+    outline: none;
+}
+
+#boxes-div .color .colors {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-content: center;
+    height: 100px;
+}
+
+#boxes-div .color .c-option {
+    width: 30px;
+    height: 20px;
+    min-width: 30px;
+    display: block;
+    border-radius: 5px;
+    margin: 5px;
+    transition: filter 0.1s;
+}
+
+#boxes-div .color .c-option:hover {
+    filter: brightness(83%);
+    cursor: pointer;
 }
 
 #boxes-div .opt-button {
     margin-bottom: 0;
+    max-width: 100px;
 }
 
-.input-wrapper {
+#boxes-div .opt-button button{
+    max-width: 100px;
+}
+
+.name .input-wrapper {
     display: inline;
     position: relative;
 }
 
-.input-wrapper::after {
+.name .input-wrapper::after {
     content: '';
     position: absolute;
     bottom: -5px;
@@ -238,4 +392,104 @@ footer h3{
     transform: scaleX(0.5);
     transform-origin: center;
     transition: transform 0.3s ease;
-  }
+}
+
+#purple {
+    background-color: #faa4ff;
+    border: 2px solid #de81e3;
+}
+
+#red {
+    background-color: #ffa4a4;
+    border: 2px solid #d98181;
+}
+
+#yellow {
+    background-color: #fffca4;
+    border: 2px solid #d9d682;
+}
+
+#orange {
+    background-color: #ffcfa4;
+    border: 2px solid #daab82;
+}
+
+#blue {
+    background-color: #a4b3ff;
+    border: 2px solid #7b8ad2;
+}
+
+#pink {
+    background-color: #ffa4fa;
+    border: 2px solid #e084dc;
+}
+
+#green {
+    background-color: #d1ffa4;
+    border: 2px solid #add881;
+}
+
+#brown {
+    background-color: #ffd7a4;
+    border: 2px solid #d5b285;
+}
+
+#cyan {
+    background-color: #a4fffa;
+    border: 2px solid #82d3cf;
+}
+
+#grey {
+    background-color: #d6d6d6;
+    border: 2px solid #adadad;
+}
+
+#s_purple {
+    background-color: #c622f5;
+    border: 2px solid #a41cc9;
+}
+
+#s_red {
+    background-color: #f52222;
+    border: 2px solid #d81717;
+}
+
+#s_yellow {
+    background-color: #f5e422;
+    border: 2px solid #d8c818;
+}
+
+#s_orange {
+    background-color: #f59422;
+    border: 2px solid #d7801d;
+}
+
+#s_blue {
+    background-color: #2245f5;
+    border: 2px solid #1736d1;
+}
+
+#s_pink {
+    background-color: #f522d5;
+    border: 2px solid #d31bb8;
+}
+
+#s_green {
+    background-color: #4ff522;
+    border: 2px solid #3fd017;
+}
+
+#s_brown {
+    background-color: #f59422;
+    border: 2px solid #cc791b;
+}
+
+#s_cyan {
+    background-color: #22f3f5;
+    border: 2px solid #15cbce;
+}
+
+#s_grey {
+    background-color: #a0a0a0;
+    border: 2px solid #818181;
+}
