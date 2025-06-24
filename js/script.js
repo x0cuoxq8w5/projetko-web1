@@ -66,7 +66,8 @@ function closeBoxes() {
 
 function addS() {
     hideBox(document.getElementById('addSBox'));
-    const sectionBoxBGColor = getComputedStyle(document.getElementById('addSBox')).backgroundColor;
+    let sectionBoxBGColor = getComputedStyle(document.getElementById('addSBox')).backgroundColor;
+    sectionBoxBGColor = rgbStringToHex(sectionBoxBGColor);
     const sectionName = document.getElementById('SectionName').value;
     if(sectionName.trim() == "" || sectionName == null){
         window.alert('Nome inválido!');
@@ -116,7 +117,7 @@ function addC(sectionId) {
     updateAll();
 }
 
-function delC(parentSectionId, card){
+function delC(parentSectionId, card) {
     let sections = JSON.parse(localStorage.getItem('sections')) || [];
     let idFree = JSON.parse(localStorage.getItem('IDcFree')) || [];
     if(!sections[parentSectionId]) return;
@@ -125,6 +126,25 @@ function delC(parentSectionId, card){
     localStorage.setItem('sections', JSON.stringify(sections));
     localStorage.setItem('IDcFree', JSON.stringify(idFree));
     updateAll();
+}
+
+function delS(sectionID) {
+    let sections = JSON.parse(localStorage.getItem('sections')) || [];
+    if(!sections[sectionID]) return;
+    let ids = JSON.parse(localStorage.getItem('IDs')) || 0;
+    let sectionToDelete = sections[sectionID];
+    if(sectionToDelete.cards.length != 0){
+        for(c in sectionToDelete.cards){
+            delC(sectionToDelete.cards[c].parentId, sectionToDelete.cards[c]);
+        }
+    }
+    sections = sections.filter(x => x.id !== sectionID);
+    reorderIDs(sections);
+    ids--;
+    localStorage.setItem('sections', JSON.stringify(sections));
+    localStorage.setItem('IDs', ids);
+    updateAll();
+    if(ids === 0) location.reload();
 }
 
 function updateAll() {
@@ -136,10 +156,21 @@ function updateAll() {
         sectionsDiv.innerHTML = "";
         for(i in sections){
             let section = sections[i];
+            let color = section.color;
+            let darkColor = shadeColor(section.color, -15);
+            let veryDarkColor = shadeColor(section.color, -35)
             let sectionDiv = document.createElement('div');
-            sectionDiv.style.backgroundColor = section.color;
+            sectionDiv.style.backgroundColor = color;
+            let sectionDelButton = document.createElement('button');
             let sectionName = document.createElement('h2');
             let addCardButton = document.createElement('button');
+            sectionDelButton.style.backgroundColor = veryDarkColor;
+            sectionDelButton.className = 'del';
+            sectionDelButton.innerHTML = 'X';
+            sectionDelButton.addEventListener('click', (e) => {
+                delS(section.id);
+            });
+            addCardButton.style.backgroundColor = darkColor;
             addCardButton.innerHTML = 'Adicionar Card +';
             addCardButton.addEventListener('click', (e) => {
                 const caixa = document.getElementById('addCBox');
@@ -149,9 +180,11 @@ function updateAll() {
                     addC(parseInt(e.target.parentElement.id));
                 }
             });
+            sectionName.style.backgroundColor = darkColor;
             sectionName.innerHTML = section.name;
             sectionDiv.id = section.id;
             sectionDiv.className = 'section';
+            sectionDiv.appendChild(sectionDelButton);
             sectionDiv.appendChild(sectionName);
 
             let cards = section.cards
@@ -164,16 +197,16 @@ function updateAll() {
                 cardDiv.style.backgroundColor = card.color;
 
                 let hexColor = rgbStringToHex(card.color);
-                let darkColor = shadeColor(hexColor, 0);
-                let veryDarkColor = shadeColor(hexColor, -15);
+                let darkCColor = shadeColor(hexColor, 0);
+                let veryDarkCColor = shadeColor(hexColor, -15);
                 let delButton = document.createElement('button');
                 let editButton = document.createElement('button');
                 delButton.className = 'side-bt delete';
                 delButton.innerHTML = 'Del';
-                delButton.style.backgroundColor = darkColor;
+                delButton.style.backgroundColor = darkCColor;
                 editButton.className = 'side-bt edit';
                 editButton.innerHTML = 'Edit';
-                editButton.style.backgroundColor = darkColor;
+                editButton.style.backgroundColor = darkCColor;
 
                 delButton.addEventListener('click', (e) =>{
                     delC(card.parentId, card);
@@ -181,8 +214,8 @@ function updateAll() {
 
                 let rightArrow = document.createElement('img');
                 let leftArrow = document.createElement('img');
-                rightArrow.style.backgroundColor = veryDarkColor;
-                leftArrow.style.backgroundColor = veryDarkColor;
+                rightArrow.style.backgroundColor = veryDarkCColor;
+                leftArrow.style.backgroundColor = veryDarkCColor;
 
                 if(sections.length > 1){
                     if(card.parentId == 0) {
@@ -276,6 +309,13 @@ function goLeft(sections, card) {
     }
     localStorage.setItem('sections', JSON.stringify(sections));
     updateAll();
+}
+
+function reorderIDs(array) {
+    let count = 0;
+    for(i in array) {
+        array[i].id = count++;
+    }
 }
 
 function selectCColor(color) {

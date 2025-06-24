@@ -116,6 +116,7 @@ footer h3{
     overflow: auto;
     display: flex;
     flex-direction: column;
+    position: relative;
 }
 
 #sections-div .section h2 {
@@ -145,6 +146,23 @@ footer h3{
     background-color: #8b8b8b;
     color: #ececec;
     cursor: pointer;
+}
+
+#sections-div .section button.del {
+    background-color: #6a6a6a;
+    color: white;
+    width: 20px;
+    height: 20px;
+    border-radius: 20px;
+    line-height: 20px;
+    position: absolute;
+    right: 10px;
+    top: 0px;
+    transition: outline 0.05s;
+}
+
+#sections-div .section button.del:hover {
+    outline: 2px solid white;
 }
 
 #sections-div .section .card {
