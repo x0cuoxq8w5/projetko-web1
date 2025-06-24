@@ -30,6 +30,21 @@ const colors = {
     s_grey: "#a0a0a0"
 }
 
+const month = {
+    0 : "Janeiro",
+    1 : "Fevereiro",
+    2 : "Março",
+    3 : "Abril",
+    4 : "Maio",
+    5 : "Junho",
+    6 : "Julho",
+    7 : "Agosto",
+    8 : "Setembro",
+    9 : "Outubro",
+    10 : "Novembro",
+    11 : "Dezembro"
+}
+
 function ini(){
     updateAll();
     if(JSON.parse(localStorage.getItem("IDc")) === null){
@@ -41,6 +56,7 @@ function ini(){
     if(JSON.parse(localStorage.getItem("IDs")) === null){
         localStorage.setItem("IDs", JSON.stringify(0));
     }
+    closeAddSectionBox();
 }
 
 function addSection() {
@@ -91,6 +107,8 @@ function addC(sectionId) {
     hideBox(document.getElementById('addCBox'));
     const cardBoxBGColor = getComputedStyle(document.getElementById('addCBox')).backgroundColor;
     const cardName = document.getElementById('CardName').value;
+    const cardDesc = document.getElementById('CardDesc').value;
+    const cardDate = new Date();
     if(cardName.trim() == "" || cardName == null){
         window.alert('Nome inválido!');
         return;
@@ -101,7 +119,15 @@ function addC(sectionId) {
             parentId : sectionId,
             id : 0,
             name: cardName,
-            color: cardBoxBGColor
+            description: cardDesc,
+            color: cardBoxBGColor,
+            date: {
+                day: cardDate.getDate(),
+                month: cardDate.getMonth(),
+                year: cardDate.getFullYear(),
+                hour: cardDate.getHours(),
+                minutes: cardDate.getMinutes()
+            }
         };
     if(freeIdArray.length !== 0){
         let freeId = freeIdArray.pop();
@@ -191,10 +217,15 @@ function updateAll() {
             for(c in cards) {
                 let card = cards[c];
                 let cardDiv = document.createElement('div');
+                let cardClickDiv = document.createElement('div');
                 let cardName = document.createElement('p');
                 cardDiv.className = 'card';
-                cardName.innerHTML = card.name;
                 cardDiv.style.backgroundColor = card.color;
+                cardClickDiv.className = 'card-click';
+                cardClickDiv.addEventListener('click', (e) => {
+                    openCardInfos(card);
+                });
+                cardName.innerHTML = card.name;
 
                 let hexColor = rgbStringToHex(card.color);
                 let darkCColor = shadeColor(hexColor, 0);
@@ -219,6 +250,9 @@ function updateAll() {
 
                 if(sections.length > 1){
                     if(card.parentId == 0) {
+                        cardClickDiv.style.transform = 'none';
+                        cardClickDiv.style.left = '0';
+                        cardClickDiv.style.width = '80%';
                         rightArrow.src = 'images/arrow_right.png' || '>';
                         rightArrow.addEventListener('click', (e) => {
                             goRight(
@@ -228,6 +262,9 @@ function updateAll() {
                         });
                         leftArrow.className = 'hidden';
                     } else if(card.parentId == (sections.length)-1) {
+                        cardClickDiv.style.transform = 'none';
+                        cardClickDiv.style.right = '0';
+                        cardClickDiv.style.width = '80%';
                         leftArrow.src = 'images/arrow_left.png' || '<';
                         leftArrow.addEventListener('click', (e) => {
                             goLeft(
@@ -237,6 +274,9 @@ function updateAll() {
                         });
                         rightArrow.className = 'hidden';
                     } else {
+                        cardClickDiv.style.transform = 'translate(-50%)';
+                        cardClickDiv.style.left = '50%';
+                        cardClickDiv.style.width = '62%';
                         rightArrow.src = 'images/arrow_right.png' || '>';
                         rightArrow.addEventListener('click', (e) => {
                             goRight(
@@ -255,8 +295,10 @@ function updateAll() {
                 } else {
                     rightArrow.className = 'hidden';
                     leftArrow.className = 'hidden';
+                    cardClickDiv.style.width = '100%'
                 }
 
+                cardDiv.appendChild(cardClickDiv);
                 cardDiv.appendChild(leftArrow);
                 cardDiv.appendChild(cardName);
                 cardDiv.appendChild(rightArrow);
@@ -279,6 +321,67 @@ function showBox(box) {
 function hideBox(box) {
     box.classList.replace('visible', 'hidden');
     overlay.classList.replace('visible', 'hidden');
+}
+
+function closeAddSectionBox() {
+    let box = document.getElementById('addSBox');
+    document.getElementById('SectionName').value = '';
+    document.getElementById('SectionName').style.backgroundColor = colors.s_grey;
+    document.getElementById('SClose').style.backgroundColor = shadeColor(colors.s_grey, -20);
+    box.style.backgroundColor = colors.s_grey;
+    if(box.classList.contains('visible')){
+        hideBox(box);
+    }
+}
+
+function closeAddCardBox() {
+    let box = document.getElementById('addCBox');
+    document.getElementById('CardName').value = '';
+    document.getElementById('CardName').style.backgroundColor = colors.grey;
+    document.getElementById('CardDesc').value = '';
+    document.getElementById('CardDesc').style.backgroundColor = shadeColor(colors.grey, 30);
+    document.getElementById('CClose').style.backgroundColor = shadeColor(colors.grey, -20);
+    box.style.backgroundColor = colors.grey;
+    if(box.classList.contains('visible')){
+        hideBox(box);
+    }
+}
+
+function closeCardBox() {
+    let box = document.getElementById('cardBox');
+    let closeBt = document.createElement('button');
+    closeBt.innerHTML = 'X';
+    closeBt.id = 'CBClose';
+    closeBt.className = 'close-bt';
+    closeBt.addEventListener('click', (e) => {
+        closeCardBox();
+    });
+    box.innerHTML = '';
+    box.appendChild(closeBt);
+    if(box.classList.contains('visible')){
+        hideBox(box);
+    }
+}
+
+function openCardInfos(card) {
+    let cardBox = document.getElementById('cardBox');
+    let cardName = document.createElement('h2');
+    let cardDesc = document.createElement('p');
+    cardName.innerHTML = card.name;
+    cardDesc.innerHTML = card.description;
+
+    let cardInfos = document.createElement('div');
+    let cardDate = document.createElement('p');
+    cardInfos.id = 'cardBoxInfos';
+    cardDate.className = 'date';
+    cardDate.innerHTML = `Card criado em ${card.date.day} de ${month[card.date.month]} de ${card.date.year} às ${card.date.hour}:${card.date.minutes}`
+
+    cardInfos.appendChild(cardDate);
+
+    cardBox.appendChild(cardName);
+    cardBox.appendChild(cardDesc);
+    cardBox.appendChild(cardInfos);
+    showBox(cardBox);
 }
 
 function goRight(sections, card) {
@@ -319,19 +422,23 @@ function reorderIDs(array) {
 }
 
 function selectCColor(color) {
-    let addCBox = document.getElementById("addCBox");
-    let nameBox = document.getElementById("CardName");
+    let addCBox = document.getElementById('addCBox');
+    let nameBox = document.getElementById('CardName');
     let descBox = document.getElementById('CardDesc');
+    let closeBt = document.getElementById('CClose');
     addCBox.style.backgroundColor = colors[color];
     nameBox.style.backgroundColor = colors[color];
     descBox.style.backgroundColor = shadeColor(colors[color], 30);
+    closeBt.style.backgroundColor = shadeColor(colors[color], -20);
 }
 
 function selectSColor(color) {
-    let addSBox = document.getElementById("addSBox");
-    let nameBox = document.getElementById("SectionName");
+    let addSBox = document.getElementById('addSBox');
+    let nameBox = document.getElementById('SectionName');
+    let closeBt = document.getElementById('SClose');
     addSBox.style.backgroundColor = colors[color];
     nameBox.style.backgroundColor = colors[color];
+    closeBt.style.backgroundColor = shadeColor(colors[color], -20);
 }
 
 function findIdIndex(array, idObject) {

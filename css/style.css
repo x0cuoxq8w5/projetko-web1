@@ -109,7 +109,7 @@ footer h3{
 #sections-div .section {
     width: 25%;
     height: 100%;
-    min-width: 275px;
+    min-width: 325px;
     background-color: #d4d4d4;
     border-radius: 10px;
     margin-right: 15px;
@@ -175,6 +175,16 @@ footer h3{
     flex-direction: row;
     justify-content: space-between;
     position: relative;
+}
+
+#sections-div .section .card .card-click {
+    height: 100%;
+    top: 0;
+    position: absolute;
+}
+
+#sections-div .section .card .card-click:hover {
+    cursor: pointer;
 }
 
 #sections-div .section .card img {
@@ -243,6 +253,52 @@ footer h3{
     border-radius: 30px;
     margin-top: 10px;
     transition: opacity 0.2s, visibility 0.2s;
+}
+
+#boxes-div .box .close-bt {
+    background-color: #ababab;
+    border: none;
+    border-radius: 20px;
+    width: 20px;
+    height: 20px;
+    line-height: 20px;
+    text-align: center;
+    position: absolute;
+    right: 20px;
+    top: 10px;
+    transition: outline 0.1s, color 0.1s;
+} 
+
+#boxes-div .box .close-bt:hover {
+    outline: 2px solid white;
+    color: white;
+    cursor: pointer;
+}
+
+#boxes-div .card {
+    width: 50%;
+}
+
+#boxes-div .card h2 {
+    font-size: 30px;
+    text-align: center;
+}
+
+#boxes-div .card p {
+    width: 90%;
+    margin: 10px auto;
+    background-color: #ececec;
+    padding: 5px 10px;
+    border-radius: 5px;
+}
+
+#boxes-div #cardBoxInfos .date {
+    background: none;
+    text-align: center;
+    padding: 5px;
+    font-size: 12px;
+    position: absolute;
+    bottom: -10px;
 }
 
 #boxes-div .opt {
