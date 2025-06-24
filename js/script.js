@@ -57,6 +57,8 @@ function ini(){
         localStorage.setItem("IDs", JSON.stringify(0));
     }
     closeAddSectionBox();
+    closeAddCardBox();
+    closeCardBox();
 }
 
 function addSection() {
