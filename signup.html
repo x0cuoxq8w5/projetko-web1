@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Cardeasy - Cadastro</title>
+</head>
+<body>
+<div id="signup">
+  <label for="name">Username: </label><input id="name" type="text"> <br>
+  <label for="email">Email: </label><input id="email" type="text"> <br>
+  <label for="password">Senha: </label><input id="password" type="text">
+  <button id="submit" type="button" onclick="submitForm()">Signup</button>
+</div>
+<script>
+  function User(name,email,password) {
+    this.name = name
+    this.email = email
+    this.password = password
+  }
+
+  function submitForm() {
+    const name = document.getElementById("name").value
+    const email = document.getElementById("email").value
+    const passwd = document.getElementById("password").value
+    let js = new User(name,email,passwd)
+    js = JSON.stringify(js)
+    signupRequest(js)
+    console.log(js)
+  }
+
+  async function signupRequest(user) {
+    fetch('http://localhost:8080/users', {
+      method: 'POST',
+      headers: {
+        'Content-Type':'application/json'
+      },
+      body: user,
+    }).then(response => response.json()).then(data => {
+      console.log('POST Request Data:', data);
+    })
+            .catch(error => {
+              console.error('Error:', error);
+            });
+  }
+</script>
+</body>
+</html>
