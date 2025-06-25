@@ -1,10 +1,3 @@
-// PARA EU VER NO FUTURO, O PROBLEMA Q VOU RESOLVER É:
-// AJEITAR A ORGANIZAÇÃO DOS IDs (OU EU FAÇO OS IDS SE ORGANIZAREM TODA
-// VEZ QUE UMA AÇÃO É FEITA, OU EU SÓ CRIO NO LOCALSTORAGE UM ID FIXO.
-// PENSEI TAMBÉM EM FAZER UMA KEY NO LOCALSOTRAGE QUE GUARDA O ÚLTIMO
-// ID EXISTENTE E, SE UM CARD FOR DELETADO, ESSE ID FICA RESERVADO EM
-// UMA KEY DE "IDs LIBERADOS". ESSA IDEIA AINDA ESTÁ EM STANDBY)
-
 const overlay = document.getElementById('overlay');
 
 const colors = {
@@ -82,7 +75,7 @@ function closeBoxes() {
     }
 }
 
-function addS() {
+async function addS() {
     hideBox(document.getElementById('addSBox'));
     let sectionBoxBGColor = getComputedStyle(document.getElementById('addSBox')).backgroundColor;
     sectionBoxBGColor = rgbStringToHex(sectionBoxBGColor);
@@ -91,18 +84,21 @@ function addS() {
         window.alert('Nome inválido!');
         return;
     }
-    let sections = JSON.parse(localStorage.getItem('sections')) || [];
-    let sectionId = JSON.parse(localStorage.getItem('IDs')) || 0;
-    let section = {
-        id : sectionId++,
+    const newSectionData = {
         name : sectionName,
         color : sectionBoxBGColor,
-        cards : []
     }
-    sections.push(section);
-    localStorage.setItem('sections', JSON.stringify(sections));
-    localStorage.setItem('IDs', JSON.stringify(sectionId));
-    updateAll();
+    fetch('http://localhost:8080/section', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(newSectionData)
+    })
+    .catch(error => {
+        console.error('Erro na requisição ou ao adicionar a seção:', error);
+        window.alert(`Erro ao adicionar seção: ${error.message || 'Não foi possível conectar ao servidor.'}`);
+    })
 }
 
 function addC(sectionId) {
