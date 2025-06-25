@@ -3,13 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <title>Cardeasy - Cadastro</title>
+  <link rel="stylesheet" href="css/style.css">
 </head>
-<body>
-<div id="signup">
-  <label for="name">Username: </label><input id="name" type="text"> <br>
-  <label for="email">Email: </label><input id="email" type="text"> <br>
-  <label for="password">Senha: </label><input id="password" type="text">
-  <button id="submit" type="button" onclick="submitForm()">Signup</button>
+<body class="formpage">
+<div id="signup" class = "formdiv">
+  <div class="formsubdiv"><label for="name" class="forminputlabel">Username: </label><input id="name" type="text" class="forminput"> <br></div>
+  <div class="formsubdiv"><label for="email" class="forminputlabel">Email: </label><input id="email" type="text" class="forminput"> <br></div>
+  <div class="formsubdiv"><label for="password" class="forminputlabel">Senha: </label><input id="password" type="text" class="forminput"></div>
+  <button id="submit" type="button" onclick="submitForm()" class="submitbutton">Signup</button>
 </div>
 <script>
   function User(name,email,password) {
