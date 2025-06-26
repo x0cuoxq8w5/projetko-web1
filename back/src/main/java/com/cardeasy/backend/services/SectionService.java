@@ -62,10 +62,12 @@ public class SectionService {
 
     public void moveCard(Long sectionId, Long cardId, Long newSectionId) {
         Section oldSection = findSectionById(sectionId);
-        Section newSection = findSectionById(cardId);
+        Section newSection = findSectionById(newSectionId);
         Card card = cardService.findCardById(cardId);
         if(card.getSection() == oldSection) {
-            cardService.moveCard(oldSection,newSection,card);
+            cardService.moveCard(oldSection, newSection, card);
+            sectionRepository.save(oldSection);
+            sectionRepository.save(newSection);
         }
         else throw new RuntimeException("Card não pertence a essa seção!");
     }

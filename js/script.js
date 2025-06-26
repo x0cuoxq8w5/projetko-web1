@@ -1,10 +1,3 @@
-// PARA EU VER NO FUTURO, O PROBLEMA Q VOU RESOLVER É:
-// AJEITAR A ORGANIZAÇÃO DOS IDs (OU EU FAÇO OS IDS SE ORGANIZAREM TODA
-// VEZ QUE UMA AÇÃO É FEITA, OU EU SÓ CRIO NO LOCALSTORAGE UM ID FIXO.
-// PENSEI TAMBÉM EM FAZER UMA KEY NO LOCALSOTRAGE QUE GUARDA O ÚLTIMO
-// ID EXISTENTE E, SE UM CARD FOR DELETADO, ESSE ID FICA RESERVADO EM
-// UMA KEY DE "IDs LIBERADOS". ESSA IDEIA AINDA ESTÁ EM STANDBY)
-
 const overlay = document.getElementById('overlay');
 
 const colors = {
@@ -82,7 +75,7 @@ function closeBoxes() {
     }
 }
 
-function addS() {
+async function addS() {
     hideBox(document.getElementById('addSBox'));
     let sectionBoxBGColor = getComputedStyle(document.getElementById('addSBox')).backgroundColor;
     sectionBoxBGColor = rgbStringToHex(sectionBoxBGColor);
@@ -91,93 +84,107 @@ function addS() {
         window.alert('Nome inválido!');
         return;
     }
-    let sections = JSON.parse(localStorage.getItem('sections')) || [];
-    let sectionId = JSON.parse(localStorage.getItem('IDs')) || 0;
-    let section = {
-        id : sectionId++,
+    const newSectionData = {
         name : sectionName,
         color : sectionBoxBGColor,
-        cards : []
     }
-    sections.push(section);
-    localStorage.setItem('sections', JSON.stringify(sections));
-    localStorage.setItem('IDs', JSON.stringify(sectionId));
-    updateAll();
+    fetch('http://localhost:8080/section', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(newSectionData)
+    })
+    .then(response => {
+        console.log('Seção adicionada com sucesso!');
+        closeAddSectionBox();
+        updateAll();
+    })
+    .catch(error => {
+        console.error('Erro na requisição ou ao adicionar a seção:', error);
+        window.alert(`Erro ao adicionar seção: ${error.message || 'Não foi possível conectar ao servidor.'}`);
+    })
 }
 
-function addC(sectionId) {
+async function addC(sectionId) {
+    const card_create_url = `http://localhost:8080/section/${sectionId}/card`;
     hideBox(document.getElementById('addCBox'));
     const cardBoxBGColor = getComputedStyle(document.getElementById('addCBox')).backgroundColor;
     const cardName = document.getElementById('CardName').value;
     const cardDesc = document.getElementById('CardDesc').value;
-    const cardDate = new Date();
     if(cardName.trim() == "" || cardName == null){
         window.alert('Nome inválido!');
         return;
     }
-    let sections = JSON.parse(localStorage.getItem('sections')) || [];
-    let freeIdArray = JSON.parse(localStorage.getItem('IDcFree')) || [];
-    let card = {
-            parentId : sectionId,
-            id : 0,
+
+    let newCardData = {
             name: cardName,
             description: cardDesc,
             color: cardBoxBGColor,
-            date: {
-                day: cardDate.getDate(),
-                month: cardDate.getMonth(),
-                year: cardDate.getFullYear(),
-                hour: cardDate.getHours(),
-                minutes: cardDate.getMinutes()
-            }
         };
-    if(freeIdArray.length !== 0){
-        let freeId = freeIdArray.pop();
-        card.id = freeId;
-        localStorage.setItem('IDcFree', JSON.stringify(freeIdArray));
-    } else{
-        let cardId = JSON.parse(localStorage.getItem('IDc')) || 0;
-        card.id = cardId++;
-        localStorage.setItem('IDc', JSON.stringify(cardId));
-    }
-    sections[sectionId].cards.push(card);
-    localStorage.setItem('sections', JSON.stringify(sections));
-    updateAll();
+    
+    fetch(card_create_url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newCardData)
+    })
+    .then(response => {
+        console.log('Card criado com sucesso!');
+        closeAddCardBox();
+        updateAll();
+    })
+    .catch(error => {
+        console.error('Erro na criação do card:', error);
+    });
 }
 
-function delC(parentSectionId, card) {
-    let sections = JSON.parse(localStorage.getItem('sections')) || [];
-    let idFree = JSON.parse(localStorage.getItem('IDcFree')) || [];
-    if(!sections[parentSectionId]) return;
-    sections[parentSectionId].cards = sections[parentSectionId].cards.filter(x => x.id !== card.id);
-    idFree.push(card.id);
-    localStorage.setItem('sections', JSON.stringify(sections));
-    localStorage.setItem('IDcFree', JSON.stringify(idFree));
-    updateAll();
+async function delC(parentSectionId, card) {
+    const card_url_to_delete = `http://localhost:8080/section/${parentSectionId}/card/${card.id}`
+    const section = await getSectionById(parentSectionId);
+    if(!section) return;
+    fetch(card_url_to_delete, {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' }
+    })
+    .then(response =>{
+        console.log('Card de id', card.id,'deletado com sucesso!');
+        updateAll();
+    })
+    .catch(error => {
+        console.error('Erro:', error);
+    });
 }
 
-function delS(sectionID) {
-    let sections = JSON.parse(localStorage.getItem('sections')) || [];
-    if(!sections[sectionID]) return;
-    let ids = JSON.parse(localStorage.getItem('IDs')) || 0;
-    let sectionToDelete = sections[sectionID];
-    if(sectionToDelete.cards.length != 0){
-        for(c in sectionToDelete.cards){
-            delC(sectionToDelete.cards[c].parentId, sectionToDelete.cards[c]);
+async function delS(sectionID) {
+    const section_url_to_delete = `http://localhost:8080/section/${sectionID}`;
+    const section = await getSectionById(sectionID);
+    const sections = await getSections();
+    if(!section) return;
+
+    if(section.cards.length > 0){
+        for(c in section.cards){
+            await delC(section.id, section.cards[c]);
         }
     }
-    sections = sections.filter(x => x.id !== sectionID);
-    reorderIDs(sections);
-    ids--;
-    localStorage.setItem('sections', JSON.stringify(sections));
-    localStorage.setItem('IDs', ids);
-    updateAll();
-    if(ids === 0) location.reload();
+
+    fetch(section_url_to_delete, {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' }
+    })
+    .then(response => {
+        console.log('Section de id', sectionID,'deletado com sucesso!');
+        updateAll();
+        if(sections.length == 1) location.reload();
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    })
 }
 
-function updateAll() {
+async function updateAll() {
     const sectionsDiv = document.getElementById('sections-div');
-    const sections = JSON.parse(localStorage.getItem('sections')) || [];
+    const sections = await getSections();
+
     document.getElementById('SectionName').value = '';
     document.getElementById('CardName').value = '';
     if(sections.length > 0){
@@ -242,7 +249,7 @@ function updateAll() {
                 editButton.style.backgroundColor = darkCColor;
 
                 delButton.addEventListener('click', (e) =>{
-                    delC(card.parentId, card);
+                    delC(section.id, card);
                 });
 
                 let rightArrow = document.createElement('img');
@@ -251,6 +258,7 @@ function updateAll() {
                 leftArrow.style.backgroundColor = veryDarkCColor;
 
                 if(sections.length > 1){
+                    let sectionsToArrow = await getSections();
                     if(card.parentId == 0) {
                         cardClickDiv.style.transform = 'none';
                         cardClickDiv.style.left = '0';
@@ -258,7 +266,7 @@ function updateAll() {
                         rightArrow.src = 'images/arrow_right.png' || '>';
                         rightArrow.addEventListener('click', (e) => {
                             goRight(
-                                JSON.parse(localStorage.getItem('sections')),
+                                sectionsToArrow,
                                 card
                             );
                         });
@@ -270,7 +278,7 @@ function updateAll() {
                         leftArrow.src = 'images/arrow_left.png' || '<';
                         leftArrow.addEventListener('click', (e) => {
                             goLeft(
-                                JSON.parse(localStorage.getItem('sections')),
+                                sectionsToArrow,
                                 card
                             );
                         });
@@ -282,14 +290,14 @@ function updateAll() {
                         rightArrow.src = 'images/arrow_right.png' || '>';
                         rightArrow.addEventListener('click', (e) => {
                             goRight(
-                                JSON.parse(localStorage.getItem('sections')),
+                                sectionsToArrow,
                                 card
                             );
                         });
                         leftArrow.src = 'images/arrow_left.png' || '<';
                         leftArrow.addEventListener('click', (e) => {
                             goLeft(
-                                JSON.parse(localStorage.getItem('sections')),
+                                sectionsToArrow,
                                 card
                             );
                         });
@@ -374,9 +382,10 @@ function openCardInfos(card) {
 
     let cardInfos = document.createElement('div');
     let cardDate = document.createElement('p');
+    let date = collectDate(card.creationDate);
     cardInfos.id = 'cardBoxInfos';
     cardDate.className = 'date';
-    cardDate.innerHTML = `Card criado em ${card.date.day} de ${month[card.date.month]} de ${card.date.year} às ${card.date.hour}:${card.date.minutes}`
+    cardDate.innerHTML = `Card criado em ${date.day} de ${month[date.month]} de ${date.year} às ${date.hour}:${date.minute}`;
 
     cardInfos.appendChild(cardDate);
 
@@ -386,33 +395,59 @@ function openCardInfos(card) {
     showBox(cardBox);
 }
 
-function goRight(sections, card) {
-    let sectionsAmount = sections.length;
-    for(let s=0; s<sectionsAmount; s++){
-        let section = sections[s];
-        if(section.id === card.parentId){
-            section.cards.splice(findIdIndex(section.cards, card), 1);
-            card.parentId++;
-            sections[s+1].cards.push(card);
-            break;
+async function goRight(sections, card) {
+    let index = 0;
+    let response;
+    do {
+        console.log(sections[index].id, card.id);
+        if(index == sections.length){
+            console.error('Card não pôde ser movido');
+            return;
         }
+        response = await fetch(`http://localhost:8080/section/${sections[index++].id}/card/${card.id}`, {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' }
+        });
+    } while(!response.ok);
+    const url = `http://localhost:8080/section/${sections[index-1].id}/card/${card.id}/move/${sections[index].id}`;
+    let response2 = await fetch(url, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' }
+    })
+    if(!response2.ok){
+        console.error('Erro ao mover o card!');
+        return;
     }
-    localStorage.setItem('sections', JSON.stringify(sections));
+    console.log('Card movido!');
     updateAll();
 }
 
-function goLeft(sections, card) {
-    let sectionsAmount = sections.length;
-    for(let s=0; s<sectionsAmount; s++){
-        let section = sections[s];
-        if(section.id === card.parentId){
-            section.cards.splice(findIdIndex(section.cards, card), 1);
-            card.parentId--;
-            sections[s-1].cards.push(card);
-            break;
+async function goLeft(sections, card) {
+    let index = sections.length-1;
+    let response;
+    do {
+        console.log(sections[index].id, card.id);
+        if(index == -1){
+            console.error('Card não pôde ser movido');
+            return;
         }
+        response = await fetch(`http://localhost:8080/section/${sections[index--].id}/card/${card.id}`, {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' }
+        });
+    } while(!response.ok);
+    const url = `http://localhost:8080/section/${sections[index+1].id}/card/${card.id}/move/${sections[index].id}`;
+    let response2 = await fetch(url, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' }
+    })
+    if(!response2.ok){
+        console.error('Erro ao mover o card!');
+        return;
     }
-    localStorage.setItem('sections', JSON.stringify(sections));
+    console.log('Card movido!');
+    let newSections = await getSections();
+    console.log(newSections);
     updateAll();
 }
 
@@ -481,6 +516,68 @@ function rgbStringToHex(rgbString) {
         .match(/\d+/g)
         .map(Number);
     return rgbToHex(r, g, b);
+}
+
+async function getSections() {
+    const response = await fetch('http://localhost:8080/section/all', {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' }
+    });
+    if(!response.ok){
+        const errorData = await response.json();
+        console.error('Erro ao buscar as seções:', response.status, errorData);
+        return null;
+    }
+    const sections = await response.json();
+    console.log('Seções carregadas com sucesso!');
+    return sections;
+}
+
+async function getSectionById(id) {
+    const section_url = `http://localhost:8080/section/${id}`;
+    const response = await fetch(section_url, {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' }
+    });
+    if(!response.ok){
+        const errorData = await response.json();
+        console.error('Erro ao buscar a seção:', response.status, errorData);
+        return null;
+    }
+    const section = await response.json();
+    console.log('Seção de id', id, 'carregado com sucesso!');
+    return section;
+}
+
+async function getCard(parentId, id){
+    const card_url = `http://localhost:8080/section/${parentId}/card/${id}`;
+    const response = await fetch(card_url, {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' }
+    });
+    if(!response.ok){
+        const errorData = await response.json();
+        console.error('Erro ao buscar o card:', response.status, errorData);
+        return null;
+    }
+    const card = await response.json();
+    console.log('Card de id', id, 'da seção de id', parentId, 'carregado com sucesso!');
+    return card;
+}
+
+function collectDate(date) {
+    let year = date.substring(0, 4);
+    let month = date.substring(5, 7);
+    let day = date.substring(8, 10);
+    let hour = date.substring(11, 13);
+    let minute = date.substring(14, 16);
+    return {
+        year: year,
+        month: month-1,
+        day: day,
+        hour: hour,
+        minute: minute
+    }
 }
 
 document.getElementById("addSForm").addEventListener("keydown", function(event) {
