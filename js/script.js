@@ -1,4 +1,5 @@
 const overlay = document.getElementById('overlay');
+let pageUser = null;
 
 const colors = {
     purple : "#faa4ff",
@@ -38,7 +39,39 @@ const month = {
     11 : "Dezembro"
 }
 
-function ini(){
+async function loginVerification() {
+    const token = getCookie('token');
+    if(!token){
+        window.location.href = 'index.html';
+        return;
+    }
+
+    try {
+        const response = await fetch('http://localhost:8080/user/self', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }
+        });
+        if(!response.ok){
+            console.error('Falha ao autenticar usuário com o token. Redirecionando para login.');
+            deleteCookie('token');
+            window.location.href = 'login.html';
+            return;
+        }
+
+        pageUser = await response.json();
+        console.log('Dados do usuário autenticado:', pageUser);
+    } catch (error) {
+        console.error('Erro na requisição /user/self ou processamento:', error);
+        deleteCookie('token'); // Limpa o token por segurança
+        window.location.href = 'login.html'; // Redireciona
+    }
+}
+
+function ini() {
+    loginVerification();
     updateAll();
     if(JSON.parse(localStorage.getItem("IDc")) === null){
         localStorage.setItem("IDc", JSON.stringify(0));
@@ -92,6 +125,7 @@ async function addS() {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
+            'Authorization': `Bearer ${getCookie('token')}`
         },
         body: JSON.stringify(newSectionData)
     })
@@ -223,6 +257,7 @@ async function updateAll() {
         sectionsDiv.innerHTML = "";
         for(i in sections){
             let section = sections[i];
+            if(section.user != pageUser.id) continue;
             let color = section.color;
             let darkColor = shadeColor(section.color, -15);
             let veryDarkColor = shadeColor(section.color, -35)
@@ -443,20 +478,39 @@ function openCardInfos(card) {
 }
 
 async function goRight(sections, card) {
-    let index = 0;
+    let indexIni = 0;
+    let indexEnd = sections.length-1;
+    let canLeave = false
     let response;
     do {
-        console.log(sections[index].id, card.id);
-        if(index == sections.length){
+        if(sections[indexIni].user != pageUser.id){
+            indexIni++;
+            continue;
+        }
+        if(indexIni == sections.length){
             console.error('Card não pôde ser movido');
             return;
         }
-        response = await fetch(`http://localhost:8080/section/${sections[index++].id}/card/${card.id}`, {
+        response = await fetch(`http://localhost:8080/section/${sections[indexIni++].id}/card/${card.id}`, {
             method: 'GET',
             headers: { 'Content-Type': 'application/json' }
         });
-    } while(!response.ok);
-    const url = `http://localhost:8080/section/${sections[index-1].id}/card/${card.id}/move/${sections[index].id}`;
+        if(!response.ok){
+            console.error('Card não pertence ao section');
+            continue;
+        }
+        canLeave = true;
+    } while(canLeave === false);
+    while(true){
+        if(indexEnd === -1){
+            console.error('FATAL ERROR');
+            return;
+        }
+        if(sections[indexEnd--].user == pageUser.id){
+            break;
+        }
+    }
+    const url = `http://localhost:8080/section/${sections[indexIni-1].id}/card/${card.id}/move/${sections[indexEnd+1].id}`;
     let response2 = await fetch(url, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' }
@@ -470,20 +524,39 @@ async function goRight(sections, card) {
 }
 
 async function goLeft(sections, card) {
-    let index = sections.length-1;
+    let indexEnd = sections.length-1;
+    let indexIni = 0;
+    let canLeave = false;
     let response;
     do {
-        console.log(sections[index].id, card.id);
-        if(index == -1){
+        if(sections[indexEnd].user != pageUser.id){
+            indexEnd--;
+            continue;
+        }
+        if(indexEnd == -1){
             console.error('Card não pôde ser movido');
             return;
         }
-        response = await fetch(`http://localhost:8080/section/${sections[index--].id}/card/${card.id}`, {
+        response = await fetch(`http://localhost:8080/section/${sections[indexEnd--].id}/card/${card.id}`, {
             method: 'GET',
             headers: { 'Content-Type': 'application/json' }
         });
-    } while(!response.ok);
-    const url = `http://localhost:8080/section/${sections[index+1].id}/card/${card.id}/move/${sections[index].id}`;
+        if(!response.ok){
+            console.error('Card não pertence ao section');
+            continue;
+        }
+        canLeave = true;
+    } while(canLeave === false);
+    while(true){
+        if(indexIni >= sections.length){
+            console.error('FATAL ERROR');
+            return;
+        }
+        if(sections[indexIni++].user == pageUser.id){
+            break;
+        }
+    }
+    const url = `http://localhost:8080/section/${sections[indexEnd+1].id}/card/${card.id}/move/${sections[indexIni-1].id}`;
     let response2 = await fetch(url, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' }
@@ -636,6 +709,48 @@ function collectDate(date) {
         hour: hour,
         minute: minute
     }
+}
+
+function setCookie(cname, cvalue) {
+let now = new Date(Date.now())
+now.setDate(now.getDate()+3)
+document.cookie = cname + "=" + cvalue + ";expires=" + now.toUTCString();
+}
+
+function getCookie(cname) {
+let name = cname + "=";
+let decodedCookie = decodeURIComponent(document.cookie);
+let ca = decodedCookie.split(';');
+for(let i = 0; i <ca.length; i++) {
+    let c = ca[i];
+    while (c.charAt(0) === ' ') {
+    c = c.substring(1);
+    }
+    if (c.indexOf(name) === 0) {
+    return c.substring(name.length, c.length);
+    }
+}
+console.log("CAIU!")
+return "";
+}
+function testLogin() {
+let token = getCookie('token')
+if (token.length === 0) {
+    console.log('TOKEN VAZIO!!!')
+}
+fetch('http://localhost:8080/user/self', {
+    method: 'GET',
+    headers: {
+    'Content-Type':'application/json',
+    'Authorization': "Bearer " + token
+    },
+
+}).then(response => response.json()).then(data => {
+    console.log('GET Request Data:', data);
+})
+        .catch(error => {
+            console.error('Error:', error);
+        });
 }
 
 document.getElementById("addSForm").addEventListener("keydown", function(event) {
