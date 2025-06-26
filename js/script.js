@@ -95,85 +95,96 @@ async function addS() {
         },
         body: JSON.stringify(newSectionData)
     })
+    .then(response => {
+        console.log('Seção adicionada com sucesso!');
+        closeAddSectionBox();
+        updateAll();
+    })
     .catch(error => {
         console.error('Erro na requisição ou ao adicionar a seção:', error);
         window.alert(`Erro ao adicionar seção: ${error.message || 'Não foi possível conectar ao servidor.'}`);
     })
 }
 
-function addC(sectionId) {
+async function addC(sectionId) {
+    const card_create_url = `http://localhost:8080/section/${sectionId}/card`;
     hideBox(document.getElementById('addCBox'));
     const cardBoxBGColor = getComputedStyle(document.getElementById('addCBox')).backgroundColor;
     const cardName = document.getElementById('CardName').value;
     const cardDesc = document.getElementById('CardDesc').value;
-    const cardDate = new Date();
     if(cardName.trim() == "" || cardName == null){
         window.alert('Nome inválido!');
         return;
     }
-    let sections = JSON.parse(localStorage.getItem('sections')) || [];
-    let freeIdArray = JSON.parse(localStorage.getItem('IDcFree')) || [];
-    let card = {
-            parentId : sectionId,
-            id : 0,
+
+    let newCardData = {
             name: cardName,
             description: cardDesc,
             color: cardBoxBGColor,
-            date: {
-                day: cardDate.getDate(),
-                month: cardDate.getMonth(),
-                year: cardDate.getFullYear(),
-                hour: cardDate.getHours(),
-                minutes: cardDate.getMinutes()
-            }
         };
-    if(freeIdArray.length !== 0){
-        let freeId = freeIdArray.pop();
-        card.id = freeId;
-        localStorage.setItem('IDcFree', JSON.stringify(freeIdArray));
-    } else{
-        let cardId = JSON.parse(localStorage.getItem('IDc')) || 0;
-        card.id = cardId++;
-        localStorage.setItem('IDc', JSON.stringify(cardId));
-    }
-    sections[sectionId].cards.push(card);
-    localStorage.setItem('sections', JSON.stringify(sections));
-    updateAll();
+    
+    fetch(card_create_url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newCardData)
+    })
+    .then(response => {
+        console.log('Card criado com sucesso!');
+        closeAddCardBox();
+        updateAll();
+    })
+    .catch(error => {
+        console.error('Erro na criação do card:', error);
+    });
 }
 
-function delC(parentSectionId, card) {
-    let sections = JSON.parse(localStorage.getItem('sections')) || [];
-    let idFree = JSON.parse(localStorage.getItem('IDcFree')) || [];
-    if(!sections[parentSectionId]) return;
-    sections[parentSectionId].cards = sections[parentSectionId].cards.filter(x => x.id !== card.id);
-    idFree.push(card.id);
-    localStorage.setItem('sections', JSON.stringify(sections));
-    localStorage.setItem('IDcFree', JSON.stringify(idFree));
-    updateAll();
+async function delC(parentSectionId, card) {
+    const card_url_to_delete = `http://localhost:8080/section/${parentSectionId}/card/${card.id}`
+    const section = await getSectionById(parentSectionId);
+    if(!section) return;
+    fetch(card_url_to_delete, {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' }
+    })
+    .then(response =>{
+        console.log('Card de id', card.id,'deletado com sucesso!');
+        updateAll();
+    })
+    .catch(error => {
+        console.error('Erro:', error);
+    });
 }
 
-function delS(sectionID) {
-    let sections = JSON.parse(localStorage.getItem('sections')) || [];
-    if(!sections[sectionID]) return;
-    let ids = JSON.parse(localStorage.getItem('IDs')) || 0;
-    let sectionToDelete = sections[sectionID];
-    if(sectionToDelete.cards.length != 0){
-        for(c in sectionToDelete.cards){
-            delC(sectionToDelete.cards[c].parentId, sectionToDelete.cards[c]);
+async function delS(sectionID) {
+    const section_url_to_delete = `http://localhost:8080/section/${sectionID}`;
+    const section = await getSectionById(sectionID);
+    const sections = await getSections();
+    if(!section) return;
+
+    if(section.cards.length > 0){
+        for(c in section.cards){
+            await delC(section.id, section.cards[c]);
         }
     }
-    sections = sections.filter(x => x.id !== sectionID);
-    reorderIDs(sections);
-    ids--;
-    localStorage.setItem('sections', JSON.stringify(sections));
-    localStorage.setItem('IDs', ids);
-    updateAll();
-    if(ids === 0) location.reload();
+
+    fetch(section_url_to_delete, {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' }
+    })
+    .then(response => {
+        console.log('Section de id', sectionID,'deletado com sucesso!');
+        updateAll();
+        if(sections.length == 1) location.reload();
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    })
 }
 
-function updateAll() {
+async function updateAll() {
     const sectionsDiv = document.getElementById('sections-div');
-    const sections = JSON.parse(localStorage.getItem('sections')) || [];
+    const sections = await getSections();
+
     document.getElementById('SectionName').value = '';
     document.getElementById('CardName').value = '';
     if(sections.length > 0){
@@ -371,8 +382,7 @@ function openCardInfos(card) {
     let cardInfos = document.createElement('div');
     let cardDate = document.createElement('p');
     cardInfos.id = 'cardBoxInfos';
-    cardDate.className = 'date';
-    cardDate.innerHTML = `Card criado em ${card.date.day} de ${month[card.date.month]} de ${card.date.year} às ${card.date.hour}:${card.date.minutes}`
+    console.log(card);
 
     cardInfos.appendChild(cardDate);
 
@@ -477,6 +487,53 @@ function rgbStringToHex(rgbString) {
         .match(/\d+/g)
         .map(Number);
     return rgbToHex(r, g, b);
+}
+
+async function getSections() {
+    const response = await fetch('http://localhost:8080/section/all', {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' }
+    });
+    if(!response.ok){
+        const errorData = await response.json();
+        console.error('Erro ao buscar as seções:', response.status, errorData);
+        return null;
+    }
+    const sections = await response.json();
+    console.log('Seções carregadas com sucesso!', sections);
+    return sections;
+}
+
+async function getSectionById(id) {
+    const section_url = `http://localhost:8080/section/${id}`;
+    const response = await fetch(section_url, {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' }
+    });
+    if(!response.ok){
+        const errorData = await response.json();
+        console.error('Erro ao buscar a seção:', response.status, errorData);
+        return null;
+    }
+    const section = await response.json();
+    console.log('Seção de id', id, 'carregado com sucesso!');
+    return section;
+}
+
+async function getCard(parentId, id){
+    const card_url = `http://localhost:8080/section/${parentId}/card/${id}`;
+    const response = await fetch(card_url, {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' }
+    });
+    if(!response.ok){
+        const errorData = await response.json();
+        console.error('Erro ao buscar o card:', response.status, errorData);
+        return null;
+    }
+    const card = await response.json();
+    console.log('Card de id', id, 'da seção de id', parentId, 'carregado com sucesso!');
+    return card;
 }
 
 document.getElementById("addSForm").addEventListener("keydown", function(event) {

@@ -10,6 +10,7 @@
   <div class="formsubdiv"><label for="email" class="forminputlabel">Email: </label><input id="email" type="text" class="forminput"> <br></div>
   <div class="formsubdiv"><label for="password" class="forminputlabel">Senha: </label><input id="password" type="text" class="forminput"> <br></div>
   <button id="submit" type="button" onclick="submitForm()" class="submitbutton">Login</button>
+  <a href="signup.html">Sign-up</a>
 </div>
 <script src="js/script.js"></script>
 <script>
@@ -36,7 +37,8 @@
       connection: "keep-alive"
     }).then(response => response.json()).then(data => {
       console.log('POST Request Data:', data);
-      setCookie(cookiename,data.token)
+      setCookie(cookiename,data.token);
+      window.location.href = 'cardeasy.html';
     })
             .catch(error => {
               console.error('Error:', error);
