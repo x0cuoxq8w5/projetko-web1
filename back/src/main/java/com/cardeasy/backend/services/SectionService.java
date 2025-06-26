@@ -32,7 +32,7 @@ public class SectionService {
 
     public void addCardToSection(Long id, CardDTO cardDTO)  {
             Section section = findSectionById(id);
-            Card card = cardService.createCard(cardDTO);
+            Card card = cardService.createCard(cardDTO,section);
             section.getCards().add(card);
             sectionRepository.save(section);
     }
@@ -60,11 +60,39 @@ public class SectionService {
             sectionRepository.deleteById(id);
     }
 
+    public void moveCard(Long sectionId, Long cardId, Long newSectionId) {
+        Section oldSection = findSectionById(sectionId);
+        Section newSection = findSectionById(cardId);
+        Card card = cardService.findCardById(cardId);
+        if(card.getSection() == oldSection) {
+            cardService.moveCard(oldSection,newSection,card);
+        }
+        else throw new RuntimeException("Card não pertence a essa seção!");
+    }
+
+    public void updateCard(Long sectionId, Long cardId, CardDTO cardDTO) {
+        Card card = cardService.findCardById(cardId);
+        if (card.getSection().getId().equals(sectionId)) {
+            cardService.updateCard(cardId, cardDTO);
+        }
+        else throw new RuntimeException("Card não pertence a essa seção!");
+    }
+
     public List<Section> findAllSections() {
         return sectionRepository.findAll();
     }
 
     public List<Section> findAllSectionsByUser(User user) {
         return sectionRepository.findByUser(user);
+    }
+
+    public Card findCard(Long id, Long cardId) {
+        Card card = cardService.findCardById(cardId);
+        if (card.getSection().getId().equals(id)) {
+            return card;
+        }
+        else {
+            throw new RuntimeException("Card não pertence a essa seção!");
+        }
     }
 }
