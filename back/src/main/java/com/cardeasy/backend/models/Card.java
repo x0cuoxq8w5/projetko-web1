@@ -7,6 +7,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Table(name = "card")
 @Entity(name = "Card")
 @NoArgsConstructor
@@ -18,6 +20,7 @@ public class Card extends AbstractEntity {
     String name;
     String description;
     String color;
+    LocalDateTime creationDate;
 
     public String getName() {
         return name;
@@ -41,5 +44,13 @@ public class Card extends AbstractEntity {
 
     public void setColor(String color) {
         this.color = color;
+    }
+
+    public LocalDateTime getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(LocalDateTime creationDate) {
+        this.creationDate = creationDate;
     }
 }
