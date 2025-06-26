@@ -110,6 +110,40 @@
                 </div>
             </div>
 
+            <div id="editCBox" class="box hidden">
+                <button id="ECClose" class="close-bt" onclick="closeAddCardBox()">X</button>
+                <form id="editCForm">
+                    <div class="opt name">
+                        <label for="name">Nome do card:</label>
+                        <div class="input-wrapper">
+                            <input id="NewCardName" type="text" name="name">
+                        </div>
+                    </div>
+                    <div class="opt desc">
+                        <label for="description">Descrição:</label>
+                        <textarea name="description" id="NewCardDesc" placeholder="Enter card description"></textarea>
+                    </div>
+                    <div class="opt color">
+                        <label for="color">Cor:</label>
+                        <div class="colors">
+                            <span class="c-option" id="purple" onclick="selectECColor('purple')"></span>
+                            <span class="c-option" id="red" onclick="selectECColor('red')"></span>
+                            <span class="c-option" id="yellow" onclick="selectECColor('yellow')"></span>
+                            <span class="c-option" id="orange" onclick="selectECColor('orange')"></span>
+                            <span class="c-option" id="blue" onclick="selectECColor('blue')"></span>
+                            <span class="c-option" id="pink" onclick="selectECColor('pink')"></span>
+                            <span class="c-option" id="green" onclick="selectECColor('green')"></span>
+                            <span class="c-option" id="brown" onclick="selectECColor('brown')"></span>
+                            <span class="c-option" id="cyan" onclick="selectECColor('cyan')"></span>
+                            <span class="c-option" id="grey" onclick="selectECColor('grey')"></span>
+                        </div>
+                    </div>
+                </form>
+                <div class="opt opt-button">
+                    <button id="editCButton" class="button bt-caixa">Alterar</button>
+                </div>
+            </div>
+
             <div id="cardBox" class="box card hidden">
                 <button id="CBClose" class="close-bt" onclick="closeCardBox()">X</button>
                 <!--

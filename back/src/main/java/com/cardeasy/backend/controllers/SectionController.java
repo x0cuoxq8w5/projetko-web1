@@ -74,7 +74,7 @@ public class SectionController {
         sectionService.addCardToSection(id,cardDto);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
-    @PutMapping("{id}/card/{cardId}/")
+    @PutMapping("{id}/card/{cardId}")
     public ResponseEntity<String> updateCard(@PathVariable Long id, @PathVariable Long cardId, @RequestBody CardDTO cardDto){
         sectionService.updateCard(id,cardId,cardDto);
         return new ResponseEntity<>("Card atualizado com sucesso", HttpStatus.OK);

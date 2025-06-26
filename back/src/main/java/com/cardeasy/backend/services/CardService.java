@@ -34,6 +34,7 @@ public class CardService {
         if (cardDTO.name() != null) card.setName(cardDTO.name());
         if (cardDTO.description() != null) card.setDescription(cardDTO.description());
         if (cardDTO.color() != null) card.setColor(cardDTO.color());
+        cardRepository.save(card);
     }
 
     public void moveCard(Section oldSection, Section newSection, Card card) {

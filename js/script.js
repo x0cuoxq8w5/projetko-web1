@@ -138,6 +138,38 @@ async function addC(sectionId) {
     });
 }
 
+async function changeC(sectionId, cardId) {
+    const card_update_url = `http://localhost:8080/section/${sectionId}/card/${cardId}`;
+    hideBox(document.getElementById('editCBox'));
+    const newCardBoxBGColor = getComputedStyle(document.getElementById('editCBox')).backgroundColor;
+    const newCardName = document.getElementById('NewCardName').value;
+    const newCardDesc = document.getElementById('NewCardDesc').value;
+    if(newCardName.trim() == "" || newCardName == null){
+        window.alert('Nome inválido!');
+        return;
+    }
+
+    let changedCardData = {
+            name: newCardName,
+            description: newCardDesc,
+            color: newCardBoxBGColor,
+        };
+    
+    await fetch(card_update_url, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(changedCardData),
+    })
+    .then(response => {
+        console.log('Card alterado com sucesso!');
+        hideBox(document.getElementById('editCBox'));
+        updateAll();
+    })
+    .catch(error => {
+        console.error('Erro na edição do card:', error);
+    });
+}
+
 async function delC(parentSectionId, cardId) {
     const card_url_to_delete = `http://localhost:8080/section/${parentSectionId}/card/${cardId}`
     const section = await getSectionById(parentSectionId);
@@ -250,6 +282,21 @@ async function updateAll() {
 
                 delButton.addEventListener('click', (e) =>{
                     delC(section.id, card.id);
+                });
+
+                editButton.addEventListener('click', (e) => {
+                    const caixa = document.getElementById('editCBox');
+                    const caixaButton = document.getElementById('editCButton');
+                    document.getElementById('NewCardName').value = card.name;
+                    document.getElementById('NewCardName').style.backgroundColor = hexColor
+                    document.getElementById('NewCardDesc').value = card.description;
+                    document.getElementById('NewCardDesc').style.backgroundColor = shadeColor(hexColor, 30);
+                    document.getElementById('editCBox').style.backgroundColor = hexColor;
+                    document.getElementById('ECClose').style.backgroundColor = veryDarkCColor;
+                    showBox(caixa);
+                    caixaButton.onclick = () => {
+                        changeC(section.id, card.id);
+                    }
                 });
 
                 let rightArrow = document.createElement('img');
@@ -464,6 +511,17 @@ function selectCColor(color) {
     let descBox = document.getElementById('CardDesc');
     let closeBt = document.getElementById('CClose');
     addCBox.style.backgroundColor = colors[color];
+    nameBox.style.backgroundColor = colors[color];
+    descBox.style.backgroundColor = shadeColor(colors[color], 30);
+    closeBt.style.backgroundColor = shadeColor(colors[color], -20);
+}
+
+function selectECColor(color) {
+    let editCBox = document.getElementById('editCBox');
+    let nameBox = document.getElementById('NewCardName');
+    let descBox = document.getElementById('NewCardDesc');
+    let closeBt = document.getElementById('ECClose');
+    editCBox.style.backgroundColor = colors[color];
     nameBox.style.backgroundColor = colors[color];
     descBox.style.backgroundColor = shadeColor(colors[color], 30);
     closeBt.style.backgroundColor = shadeColor(colors[color], -20);
