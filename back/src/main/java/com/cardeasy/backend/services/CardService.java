@@ -6,6 +6,8 @@ import com.cardeasy.backend.repositories.CardRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+
 @Service
 public class CardService {
     @Autowired
@@ -16,6 +18,7 @@ public class CardService {
                 .name(cardDTO.name())
                 .description(cardDTO.description())
                 .color(cardDTO.color())
+                .creationDate(LocalDateTime.now())
                 .build();
         cardRepository.save(card);
         return card;
