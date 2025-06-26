@@ -2,6 +2,7 @@ package com.cardeasy.backend.controllers;
 
 import com.cardeasy.backend.dtos.CardDTO;
 import com.cardeasy.backend.dtos.SectionDTO;
+import com.cardeasy.backend.models.Card;
 import com.cardeasy.backend.models.Section;
 import com.cardeasy.backend.models.User;
 import com.cardeasy.backend.services.SectionService;
@@ -57,14 +58,30 @@ public class SectionController {
         return ResponseEntity.status(HttpStatus.OK).body(sections);
     }
 
+    @GetMapping("{id}/card/{cardId}")
+    public ResponseEntity<Card> getCard(@PathVariable Long id, @PathVariable Long cardId){
+        Card card = sectionService.findCard(id,cardId);
+        return ResponseEntity.status(HttpStatus.OK).body(card);
+    }
+    @PutMapping("{id}/card/{cardId}/move/{newSectionId}")
+    public ResponseEntity<String> moveCard(@PathVariable Long id, @PathVariable Long cardId, @PathVariable Long newSectionId){
+        sectionService.moveCard(id,cardId,newSectionId);
+        return new ResponseEntity<>("Card movido com sucesso", HttpStatus.OK);
+    }
+
     @PostMapping("/{id}/card")
     public ResponseEntity<Void> createCard(@PathVariable Long id, @RequestBody CardDTO cardDto){
         sectionService.addCardToSection(id,cardDto);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
+    @PutMapping("{id}/card/{cardId}/")
+    public ResponseEntity<String> updateCard(@PathVariable Long id, @PathVariable Long cardId, @RequestBody CardDTO cardDto){
+        sectionService.updateCard(id,cardId,cardDto);
+        return new ResponseEntity<>("Card atualizado com sucesso", HttpStatus.OK);
+    }
     @DeleteMapping("/{id}/card/{cardId}")
-    public ResponseEntity<Void> deleteCard(@PathVariable Long id, @PathVariable Long cardId){
-        sectionService.removeCardFromSection(id,cardId);
+    public ResponseEntity<Void> deleteCard(@PathVariable Long id, @PathVariable Long cardId) {
+        sectionService.removeCardFromSection(id, cardId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
