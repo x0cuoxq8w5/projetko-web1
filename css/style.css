@@ -17,6 +17,7 @@ header {
     background-color: rgb(219, 219, 219);;
     text-align: center;
     height: 70px;
+    position: relative;
 }
 
 footer {
@@ -28,6 +29,36 @@ footer {
 
 header h1 {
     line-height: 70px;
+}
+
+header button.exit {
+    background-color: rgb(144, 144, 144);
+    color: black;
+    font-size: 24px;
+    font-weight: bold;
+    width: 80px;
+    height: 50px;
+    border: none;
+    border-radius: 5px;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+header #hello-name {
+    font-size: 24px;
+    font-weight: bold;
+    line-height: 50px;
+    position: absolute;
+    top: 10px;
+    right: 110px;
+}
+
+header button.exit:hover {
+    background-color: red;
+    color: white;
+    cursor: pointer;
 }
 
 footer h3{
@@ -123,7 +154,7 @@ footer h3{
     text-align: center;
     padding: 10px;
     background-color: #c4c4c4;
-    color: #4b4b4b;
+    color: black;
     border-top-left-radius: 10px;
     border-top-right-radius: 10px;
 }
@@ -133,7 +164,7 @@ footer h3{
     border: none;
     border-radius: 5px;
     background-color: #c4c4c4;
-    color: #4b4b4b;
+    color: black;
     margin: 10px auto;
     width: 50%;
     height: 35px;
@@ -337,6 +368,7 @@ footer h3{
     resize: none;
     padding: 7px;
     box-shadow: inset 0px 0px 3px rgba(0, 0, 0, 0.5);
+    overflow: inherit;
 }
 
 #boxes-div .desc textarea:focus {
@@ -493,6 +525,7 @@ footer h3{
     background-color: #a0a0a0;
     border: 2px solid #818181;
 }
+
 body.formpage {
     background:#ececec;
 }
@@ -512,9 +545,18 @@ div.formsubdiv {
 
 input.forminput {
     flex: auto;
-    height:40px
+    height: 40px;
+    margin: 5px;
+    padding: 0px 5px;
+    font-size: 20px;
+    border: none;
+    border-radius: 5px;
 }
 
+.forminputlabel {
+    font-weight: bold;
+    font-size: 24px;
+}
 
 button.submitbutton {
     background-color: #04AA6D;

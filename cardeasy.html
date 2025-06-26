@@ -9,6 +9,8 @@
 <body onload="ini()">
     <header>
         <h1>Cardeasy</h1>
+        <h2 id="hello-name">Olá</h2>
+        <button class="exit" onclick="exitAccount()">Sair</button>
     </header>
 
     <div id="container">
@@ -111,7 +113,7 @@
             </div>
 
             <div id="editCBox" class="box hidden">
-                <button id="ECClose" class="close-bt" onclick="closeAddCardBox()">X</button>
+                <button id="ECClose" class="close-bt" onclick="hideBox(document.getElementById('editCBox'))">X</button>
                 <form id="editCForm">
                     <div class="opt name">
                         <label for="name">Nome do card:</label>

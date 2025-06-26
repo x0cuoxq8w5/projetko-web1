@@ -70,21 +70,17 @@ async function loginVerification() {
     }
 }
 
-function ini() {
-    loginVerification();
-    updateAll();
-    if(JSON.parse(localStorage.getItem("IDc")) === null){
-        localStorage.setItem("IDc", JSON.stringify(0));
-    }
-    if(JSON.parse(localStorage.getItem("IDcFree")) === null){
-        localStorage.setItem("IDcFree", JSON.stringify([]));
-    }
-    if(JSON.parse(localStorage.getItem("IDs")) === null){
-        localStorage.setItem("IDs", JSON.stringify(0));
-    }
+async function ini() {
+    await loginVerification();
+    await updateAll();
     closeAddSectionBox();
     closeAddCardBox();
     closeCardBox();
+}
+
+function exitAccount() {
+    deleteCookie('token');
+    window.location.href = 'index.html';
 }
 
 function addSection() {
@@ -250,6 +246,8 @@ async function delS(sectionID) {
 async function updateAll() {
     const sectionsDiv = document.getElementById('sections-div');
     const sections = await getSections();
+
+    document.getElementById('hello-name').innerHTML = `Olá ${pageUser.name}!`;
 
     document.getElementById('SectionName').value = '';
     document.getElementById('CardName').value = '';
@@ -712,45 +710,49 @@ function collectDate(date) {
 }
 
 function setCookie(cname, cvalue) {
-let now = new Date(Date.now())
-now.setDate(now.getDate()+3)
-document.cookie = cname + "=" + cvalue + ";expires=" + now.toUTCString();
+    let now = new Date(Date.now())
+    now.setDate(now.getDate()+3)
+    document.cookie = cname + "=" + cvalue + ";expires=" + now.toUTCString();
 }
 
 function getCookie(cname) {
-let name = cname + "=";
-let decodedCookie = decodeURIComponent(document.cookie);
-let ca = decodedCookie.split(';');
-for(let i = 0; i <ca.length; i++) {
-    let c = ca[i];
-    while (c.charAt(0) === ' ') {
-    c = c.substring(1);
+    let name = cname + "=";
+    let decodedCookie = decodeURIComponent(document.cookie);
+    let ca = decodedCookie.split(';');
+    for(let i = 0; i <ca.length; i++) {
+        let c = ca[i];
+        while (c.charAt(0) === ' ') {
+        c = c.substring(1);
+        }
+        if (c.indexOf(name) === 0) {
+        return c.substring(name.length, c.length);
+        }
     }
-    if (c.indexOf(name) === 0) {
-    return c.substring(name.length, c.length);
-    }
-}
-console.log("CAIU!")
-return "";
+    console.log("CAIU!")
+    return "";
 }
 function testLogin() {
-let token = getCookie('token')
-if (token.length === 0) {
-    console.log('TOKEN VAZIO!!!')
-}
-fetch('http://localhost:8080/user/self', {
-    method: 'GET',
-    headers: {
-    'Content-Type':'application/json',
-    'Authorization': "Bearer " + token
-    },
+    let token = getCookie('token')
+    if (token.length === 0) {
+        console.log('TOKEN VAZIO!!!')
+    }
+    fetch('http://localhost:8080/user/self', {
+        method: 'GET',
+        headers: {
+        'Content-Type':'application/json',
+        'Authorization': "Bearer " + token
+        },
 
-}).then(response => response.json()).then(data => {
-    console.log('GET Request Data:', data);
-})
-        .catch(error => {
-            console.error('Error:', error);
-        });
+    }).then(response => response.json()).then(data => {
+        console.log('GET Request Data:', data);
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+}
+
+function deleteCookie(cname) {
+    document.cookie = cname + "=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;";
 }
 
 document.getElementById("addSForm").addEventListener("keydown", function(event) {
