@@ -381,8 +381,10 @@ function openCardInfos(card) {
 
     let cardInfos = document.createElement('div');
     let cardDate = document.createElement('p');
+    let date = collectDate(card.creationDate);
     cardInfos.id = 'cardBoxInfos';
-    console.log(card);
+    cardDate.className = 'date';
+    cardDate.innerHTML = `Card criado em ${date.day} de ${month[date.month]} de ${date.year} às ${date.hour}:${date.minute}`;
 
     cardInfos.appendChild(cardDate);
 
@@ -392,19 +394,8 @@ function openCardInfos(card) {
     showBox(cardBox);
 }
 
-function goRight(sections, card) {
-    let sectionsAmount = sections.length;
-    for(let s=0; s<sectionsAmount; s++){
-        let section = sections[s];
-        if(section.id === card.parentId){
-            section.cards.splice(findIdIndex(section.cards, card), 1);
-            card.parentId++;
-            sections[s+1].cards.push(card);
-            break;
-        }
-    }
-    localStorage.setItem('sections', JSON.stringify(sections));
-    updateAll();
+async function goRight(sections, card) {
+    
 }
 
 function goLeft(sections, card) {
@@ -534,6 +525,21 @@ async function getCard(parentId, id){
     const card = await response.json();
     console.log('Card de id', id, 'da seção de id', parentId, 'carregado com sucesso!');
     return card;
+}
+
+function collectDate(date) {
+    let year = date.substring(0, 4);
+    let month = date.substring(5, 7);
+    let day = date.substring(8, 10);
+    let hour = date.substring(11, 13);
+    let minute = date.substring(14, 16);
+    return {
+        year: year,
+        month: month-1,
+        day: day,
+        hour: hour,
+        minute: minute
+    }
 }
 
 document.getElementById("addSForm").addEventListener("keydown", function(event) {
