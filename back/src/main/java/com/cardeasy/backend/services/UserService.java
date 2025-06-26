@@ -48,7 +48,6 @@ public class UserService {
                 .email(userDTO.email())
                 .password(securityConfiguration.passwordEncoder().encode(userDTO.password()))
                 .sections(new ArrayList<>())
-                .role(Role.USER)
                 .build();
 
         userRepository.save(newUser);

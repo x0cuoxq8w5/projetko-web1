@@ -44,10 +44,6 @@ public class User extends AbstractEntity implements UserDetails {
     @JsonSerialize(using = AbstractEntityListSerializer.class)
     private List<Section> sections;
 
-    @Column(nullable = false)
-    @JsonIgnore
-    private Role role = Role.USER;
-
     public String getName() {
         return name;
     }
@@ -80,17 +76,9 @@ public class User extends AbstractEntity implements UserDetails {
         this.sections = sections;
     }
 
-    public Role getRole() {
-        return role;
-    }
-
-    public void setRole(Role role) {
-        this.role = role;
-    }
-
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Stream.of(getRole().name()).map(SimpleGrantedAuthority::new).collect(Collectors.toList());
+        return Stream.of("USER").map(SimpleGrantedAuthority::new).collect(Collectors.toList());
     }
 
     @Override
