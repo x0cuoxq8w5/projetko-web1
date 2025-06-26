@@ -339,7 +339,7 @@ async function updateAll() {
 
                 if(sections.length > 1){
                     let sectionsToArrow = await getSections();
-                    if(findIdIndex(sections, section.id) == 0) {
+                    if(section.id == sections[userFirstSectionIndex(sections, pageUser.id)].id) {
                         cardClickDiv.style.transform = 'none';
                         cardClickDiv.style.left = '0';
                         cardClickDiv.style.width = '80%';
@@ -351,7 +351,7 @@ async function updateAll() {
                             );
                         });
                         leftArrow.className = 'hidden';
-                    } else if(findIdIndex(sections, section.id) == (sections.length)-1) {
+                    } else if(section.id == sections[userLastSectionIndex(sections, pageUser.id)].id) {
                         cardClickDiv.style.transform = 'none';
                         cardClickDiv.style.right = '0';
                         cardClickDiv.style.width = '80%';
@@ -477,7 +477,7 @@ function openCardInfos(card) {
 
 async function goRight(sections, card) {
     let indexIni = 0;
-    let indexEnd = sections.length-1;
+    let indexEnd = 0;
     let canLeave = false
     let response;
     do {
@@ -499,16 +499,17 @@ async function goRight(sections, card) {
         }
         canLeave = true;
     } while(canLeave === false);
+    indexEnd = indexIni;
     while(true){
-        if(indexEnd === -1){
+        if(indexEnd === sections.length){
             console.error('FATAL ERROR');
             return;
         }
-        if(sections[indexEnd--].user == pageUser.id){
+        if(sections[indexEnd++].user == pageUser.id){
             break;
         }
     }
-    const url = `http://localhost:8080/section/${sections[indexIni-1].id}/card/${card.id}/move/${sections[indexEnd+1].id}`;
+    const url = `http://localhost:8080/section/${sections[indexIni-1].id}/card/${card.id}/move/${sections[indexEnd-1].id}`;
     let response2 = await fetch(url, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' }
@@ -545,16 +546,17 @@ async function goLeft(sections, card) {
         }
         canLeave = true;
     } while(canLeave === false);
+    indexIni = indexEnd;
     while(true){
-        if(indexIni >= sections.length){
+        if(indexIni === -1){
             console.error('FATAL ERROR');
             return;
         }
-        if(sections[indexIni++].user == pageUser.id){
+        if(sections[indexIni--].user == pageUser.id){
             break;
         }
     }
-    const url = `http://localhost:8080/section/${sections[indexEnd+1].id}/card/${card.id}/move/${sections[indexIni-1].id}`;
+    const url = `http://localhost:8080/section/${sections[indexEnd+1].id}/card/${card.id}/move/${sections[indexIni+1].id}`;
     let response2 = await fetch(url, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' }
@@ -612,6 +614,30 @@ function findIdIndex(array, idObject) {
         let object = array[i];
         if(object.id == idObject) return parseInt(i);
     }
+}
+
+function userFirstSectionIndex(sections, userId) {
+    if(sections.length == 0) return;
+    let index = 0;
+    for(s in sections){
+        sec = sections[s];
+        if(sec.user == userId){
+            index = parseInt(s);
+            break;
+        }
+        index = 0
+    }
+    return index;
+}
+
+function userLastSectionIndex(sections, userId) {
+    if(sections.length == 0) return;
+    let index = 0;
+    for(s in sections){
+        sec = sections[s];
+        if(sec.user == userId) index = parseInt(s);
+    }
+    return index;
 }
 
 function shadeColor(hex, percent) {
