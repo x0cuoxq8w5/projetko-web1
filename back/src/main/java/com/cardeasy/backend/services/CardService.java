@@ -37,9 +37,9 @@ public class CardService {
     }
 
     public void moveCard(Section oldSection, Section newSection, Card card) {
-            card.setSection(newSection);
             oldSection.getCards().remove(card);
             newSection.getCards().add(card);
+            card.setSection(newSection);
             cardRepository.save(card);
     }
 

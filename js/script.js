@@ -259,7 +259,7 @@ async function updateAll() {
 
                 if(sections.length > 1){
                     let sectionsToArrow = await getSections();
-                    if(card.parentId == 0) {
+                    if(findIdIndex(sections, section.id) == 0) {
                         cardClickDiv.style.transform = 'none';
                         cardClickDiv.style.left = '0';
                         cardClickDiv.style.width = '80%';
@@ -271,7 +271,7 @@ async function updateAll() {
                             );
                         });
                         leftArrow.className = 'hidden';
-                    } else if(card.parentId == (sections.length)-1) {
+                    } else if(findIdIndex(sections, section.id) == (sections.length)-1) {
                         cardClickDiv.style.transform = 'none';
                         cardClickDiv.style.right = '0';
                         cardClickDiv.style.width = '80%';
@@ -481,7 +481,7 @@ function selectSColor(color) {
 function findIdIndex(array, idObject) {
     for(i in array) {
         let object = array[i];
-        if(object.id == idObject.id) return parseInt(i);
+        if(object.id == idObject) return parseInt(i);
     }
 }
 
