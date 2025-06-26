@@ -35,14 +35,19 @@
       },
       body: user,
       connection: "keep-alive"
-    }).then(response => response.json()).then(data => {
+    }).then(response => {
+      if(!response.ok){
+        return response.json().then(err => { throw new Error(err.message || response.statusText); });
+      }
+      return response.json()
+    }).then(data => {
       console.log('POST Request Data:', data);
       setCookie(cookiename,data.token);
       window.location.href = 'cardeasy.html';
     })
-            .catch(error => {
-              console.error('Error:', error);
-            });
+    .catch(error => {
+      console.error(error);
+    });
   }
   /*//move essas depois pra o script.js//*/
   function setCookie(cname, cvalue) {

@@ -88,7 +88,7 @@ async function addS() {
         name : sectionName,
         color : sectionBoxBGColor,
     }
-    fetch('http://localhost:8080/section', {
+    await fetch('http://localhost:8080/section', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -123,7 +123,7 @@ async function addC(sectionId) {
             color: cardBoxBGColor,
         };
     
-    fetch(card_create_url, {
+    await fetch(card_create_url, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(newCardData)
@@ -138,16 +138,16 @@ async function addC(sectionId) {
     });
 }
 
-async function delC(parentSectionId, card) {
-    const card_url_to_delete = `http://localhost:8080/section/${parentSectionId}/card/${card.id}`
+async function delC(parentSectionId, cardId) {
+    const card_url_to_delete = `http://localhost:8080/section/${parentSectionId}/card/${cardId}`
     const section = await getSectionById(parentSectionId);
     if(!section) return;
-    fetch(card_url_to_delete, {
+    await fetch(card_url_to_delete, {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json' }
     })
     .then(response =>{
-        console.log('Card de id', card.id,'deletado com sucesso!');
+        console.log('Card de id', cardId,'deletado com sucesso!');
         updateAll();
     })
     .catch(error => {
@@ -163,7 +163,7 @@ async function delS(sectionID) {
 
     if(section.cards.length > 0){
         for(c in section.cards){
-            await delC(section.id, section.cards[c]);
+            await delC(section.id, section.cards[c].id);
         }
     }
 
@@ -249,7 +249,7 @@ async function updateAll() {
                 editButton.style.backgroundColor = darkCColor;
 
                 delButton.addEventListener('click', (e) =>{
-                    delC(section.id, card);
+                    delC(section.id, card.id);
                 });
 
                 let rightArrow = document.createElement('img');

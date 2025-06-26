@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class SectionService {
@@ -38,7 +39,11 @@ public class SectionService {
     }
 
     public void removeCardFromSection(Long id, Long idCard)  {
+        Section section = findSectionById(id);
+        Card cardToRemove = cardService.findCardById(idCard);
+        section.getCards().remove(cardToRemove);
         cardService.deleteCard(idCard);
+        sectionRepository.save(section);
     }
 
     public Section findSectionById(Long id)  {
