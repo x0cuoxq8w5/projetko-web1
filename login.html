@@ -27,7 +27,7 @@
 
   async function loginRequest(user) {
     let cookiename='token';
-    fetch('http://localhost:8080/users/login', {
+    fetch('http://localhost:8080/user/login', {
       method: 'POST',
       headers: {
         'Content-Type':'application/json'
@@ -64,6 +64,25 @@
     }
     console.log("CAIU!")
     return "";
+  }
+  function testLogin() {
+    let token = getCookie('token')
+    if (token.length === 0) {
+      console.log('TOKEN VAZIO!!!')
+    }
+    fetch('http://localhost:8080/user/self', {
+      method: 'GET',
+      headers: {
+        'Content-Type':'application/json',
+        'Authorization': "Bearer " + token
+      },
+
+    }).then(response => response.json()).then(data => {
+      console.log('GET Request Data:', data);
+    })
+            .catch(error => {
+              console.error('Error:', error);
+            });
   }
 </script>
 </body>

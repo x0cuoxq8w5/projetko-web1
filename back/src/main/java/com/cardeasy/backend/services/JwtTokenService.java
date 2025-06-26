@@ -15,7 +15,7 @@ import java.time.ZonedDateTime;
 public class JwtTokenService {
     private static final String SECRET_KEY = "v$vI?9{;c#5(f6Z{3O7X)klm=CHn5{~0";
 
-    private static final String ISSUER = "cbm-api";
+    private static final String ISSUER = "cardeasy";
 
     public String generateToken(User user) {
         try {

@@ -52,8 +52,8 @@ public class UserController {
             return new ResponseEntity<>("User deletado com sucesso", HttpStatus.NO_CONTENT);
     }
 
-    @GetMapping("/test")
-    public ResponseEntity<User> getAuthenticationTest(@AuthenticationPrincipal User user) {
+    @GetMapping("/self")
+    public ResponseEntity<User> getSelf(@AuthenticationPrincipal User user) {
         return new ResponseEntity<>(user,HttpStatus.OK);
     }
 }

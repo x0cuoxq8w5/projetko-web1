@@ -10,8 +10,15 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Table(name = "users")
 @Entity(name = "User")
@@ -23,7 +30,7 @@ import java.util.List;
         generator = ObjectIdGenerators.PropertyGenerator.class,
         property = "id"
 )
-public class User extends AbstractEntity {
+public class User extends AbstractEntity implements UserDetails {
     @Column(nullable = false)
     private String name;
 
@@ -33,9 +40,13 @@ public class User extends AbstractEntity {
     @JsonIgnore
     private String password;
 
-    @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL)
+    @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JsonSerialize(using = AbstractEntityListSerializer.class)
     private List<Section> sections;
+
+    @Column(nullable = false)
+    @JsonIgnore
+    private Role role = Role.USER;
 
     public String getName() {
         return name;
@@ -67,5 +78,23 @@ public class User extends AbstractEntity {
 
     public void setSections(List<Section> sections) {
         this.sections = sections;
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return Stream.of(getRole().name()).map(SimpleGrantedAuthority::new).collect(Collectors.toList());
+    }
+
+    @Override
+    public String getUsername() {
+        return getEmail();
     }
 }
