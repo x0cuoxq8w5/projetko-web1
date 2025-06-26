@@ -40,6 +40,7 @@ public class CardService {
             card.setSection(newSection);
             oldSection.getCards().remove(card);
             newSection.getCards().add(card);
+            cardRepository.save(card);
     }
 
 

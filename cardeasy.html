@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cardeasy</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body onload="ini()">
+    <header>
+        <h1>Cardeasy</h1>
+    </header>
+
+    <div id="container">
+
+        <div id="overlay" class="hidden"></div>
+
+        <div id="bt-div">
+            <button id="addSectionButton" class="button" onclick="addSection()">Adicionar Seção</button>
+        </div>
+
+        <div id="sections-div">
+            <!--
+            <div class="section">
+                <button class="del">X</button>
+                <h2>Teste</h2>
+                <div class="card" onclick="showBox(document.getElementById('cardBox'))">
+                    <div class="card-click"></div>
+                    <img src="images/arrow_left.png" alt="left arrow">
+                    <p>Card 1</p>
+                    <img src="images/arrow_right.png" alt="right arrow">
+                    <button class="side-bt delete">Del</button>
+                    <button class="side-bt edit">Edit</button>
+                </div>
+                <div class="card">
+                    <img src="images/arrow_left.png" alt="left arrow">
+                    <p>Card 2</p>
+                    <img src="images/arrow_right.png" alt="right arrow">
+                    <button class="side-bt delete">Del</button>
+                    <button class="side-bt edit">Edit</button>
+                </div>
+                <button>Adicionar Card +</button>
+            </div>
+            -->
+        </div>
+        
+        <div id="boxes-div"> <!-- Início de boxes-div -->
+
+            <div id="addSBox" class="box hidden">
+                <button id="SClose" class="close-bt" onclick="closeAddSectionBox()">X</button>
+                <form id="addSForm">
+                    <div class="opt name">
+                        <label for="name">Nome da seção:</label>
+                        <div class="input-wrapper">
+                            <input id="SectionName" type="text" name="name">
+                        </div>
+                    </div>
+                    <div class="opt color">
+                        <label for="color">Cor:</label>
+                        <div class="colors">
+                            <span class="c-option" id="s_purple" onclick="selectSColor('s_purple')"></span>
+                            <span class="c-option" id="s_red" onclick="selectSColor('s_red')"></span>
+                            <span class="c-option" id="s_yellow" onclick="selectSColor('s_yellow')"></span>
+                            <span class="c-option" id="s_orange" onclick="selectSColor('s_orange')"></span>
+                            <span class="c-option" id="s_blue" onclick="selectSColor('s_blue')"></span>
+                            <span class="c-option" id="s_pink" onclick="selectSColor('s_pink')"></span>
+                            <span class="c-option" id="s_green" onclick="selectSColor('s_green')"></span>
+                            <span class="c-option" id="s_brown" onclick="selectSColor('s_brown')"></span>
+                            <span class="c-option" id="s_cyan" onclick="selectSColor('s_cyan')"></span>
+                            <span class="c-option" id="s_grey" onclick="selectSColor('s_grey')"></span>
+                        </div>
+                    </div>
+                </form>
+                <div class="opt opt-button">
+                    <button class="button bt-caixa" onclick="addS()">Adicionar</button>
+                </div>
+            </div>
+
+            <div id="addCBox" class="box hidden">
+                <button id="CClose" class="close-bt" onclick="closeAddCardBox()">X</button>
+                <form id="addCForm">
+                    <div class="opt name">
+                        <label for="name">Nome do card:</label>
+                        <div class="input-wrapper">
+                            <input id="CardName" type="text" name="name">
+                        </div>
+                    </div>
+                    <div class="opt desc">
+                        <label for="description">Descrição:</label>
+                        <textarea name="description" id="CardDesc" placeholder="Enter card description"></textarea>
+                    </div>
+                    <div class="opt color">
+                        <label for="color">Cor:</label>
+                        <div class="colors">
+                            <span class="c-option" id="purple" onclick="selectCColor('purple')"></span>
+                            <span class="c-option" id="red" onclick="selectCColor('red')"></span>
+                            <span class="c-option" id="yellow" onclick="selectCColor('yellow')"></span>
+                            <span class="c-option" id="orange" onclick="selectCColor('orange')"></span>
+                            <span class="c-option" id="blue" onclick="selectCColor('blue')"></span>
+                            <span class="c-option" id="pink" onclick="selectCColor('pink')"></span>
+                            <span class="c-option" id="green" onclick="selectCColor('green')"></span>
+                            <span class="c-option" id="brown" onclick="selectCColor('brown')"></span>
+                            <span class="c-option" id="cyan" onclick="selectCColor('cyan')"></span>
+                            <span class="c-option" id="grey" onclick="selectCColor('grey')"></span>
+                        </div>
+                    </div>
+                </form>
+                <div class="opt opt-button">
+                    <button id="addCButton" class="button bt-caixa">Adicionar</button>
+                </div>
+            </div>
+
+            <div id="cardBox" class="box card hidden">
+                <button id="CBClose" class="close-bt" onclick="closeCardBox()">X</button>
+                <!--
+                <h2>Card 1</h2>
+                <p>Descrição muito top de uma descrição muito extensa pra eu testar se o texto vai cortar, pular linha ou se ele vai passar da caixa. Ele pulou a linha!</p>
+                <div id="cardBoxInfos">
+                    <p class="date">Criado em 24 de janeiro às 15:46</p>
+                </div>
+                -->
+            </div>
+
+        </div> <!-- Fim de boxes-div -->
+
+    </div>
+
+    <footer>
+        <h3>Footer</h3>
+    </footer>
+    <script src="js/script.js"></script>
+</body>
+</html>

@@ -249,7 +249,7 @@ async function updateAll() {
                 editButton.style.backgroundColor = darkCColor;
 
                 delButton.addEventListener('click', (e) =>{
-                    delC(card.parentId, card);
+                    delC(section.id, card);
                 });
 
                 let rightArrow = document.createElement('img');
@@ -258,6 +258,7 @@ async function updateAll() {
                 leftArrow.style.backgroundColor = veryDarkCColor;
 
                 if(sections.length > 1){
+                    let sectionsToArrow = await getSections();
                     if(card.parentId == 0) {
                         cardClickDiv.style.transform = 'none';
                         cardClickDiv.style.left = '0';
@@ -265,7 +266,7 @@ async function updateAll() {
                         rightArrow.src = 'images/arrow_right.png' || '>';
                         rightArrow.addEventListener('click', (e) => {
                             goRight(
-                                JSON.parse(localStorage.getItem('sections')),
+                                sectionsToArrow,
                                 card
                             );
                         });
@@ -277,7 +278,7 @@ async function updateAll() {
                         leftArrow.src = 'images/arrow_left.png' || '<';
                         leftArrow.addEventListener('click', (e) => {
                             goLeft(
-                                JSON.parse(localStorage.getItem('sections')),
+                                sectionsToArrow,
                                 card
                             );
                         });
@@ -289,14 +290,14 @@ async function updateAll() {
                         rightArrow.src = 'images/arrow_right.png' || '>';
                         rightArrow.addEventListener('click', (e) => {
                             goRight(
-                                JSON.parse(localStorage.getItem('sections')),
+                                sectionsToArrow,
                                 card
                             );
                         });
                         leftArrow.src = 'images/arrow_left.png' || '<';
                         leftArrow.addEventListener('click', (e) => {
                             goLeft(
-                                JSON.parse(localStorage.getItem('sections')),
+                                sectionsToArrow,
                                 card
                             );
                         });
@@ -395,21 +396,58 @@ function openCardInfos(card) {
 }
 
 async function goRight(sections, card) {
-    
+    let index = 0;
+    let response;
+    do {
+        console.log(sections[index].id, card.id);
+        if(index == sections.length){
+            console.error('Card não pôde ser movido');
+            return;
+        }
+        response = await fetch(`http://localhost:8080/section/${sections[index++].id}/card/${card.id}`, {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' }
+        });
+    } while(!response.ok);
+    const url = `http://localhost:8080/section/${sections[index-1].id}/card/${card.id}/move/${sections[index].id}`;
+    let response2 = await fetch(url, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' }
+    })
+    if(!response2.ok){
+        console.error('Erro ao mover o card!');
+        return;
+    }
+    console.log('Card movido!');
+    updateAll();
 }
 
-function goLeft(sections, card) {
-    let sectionsAmount = sections.length;
-    for(let s=0; s<sectionsAmount; s++){
-        let section = sections[s];
-        if(section.id === card.parentId){
-            section.cards.splice(findIdIndex(section.cards, card), 1);
-            card.parentId--;
-            sections[s-1].cards.push(card);
-            break;
+async function goLeft(sections, card) {
+    let index = sections.length-1;
+    let response;
+    do {
+        console.log(sections[index].id, card.id);
+        if(index == -1){
+            console.error('Card não pôde ser movido');
+            return;
         }
+        response = await fetch(`http://localhost:8080/section/${sections[index--].id}/card/${card.id}`, {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' }
+        });
+    } while(!response.ok);
+    const url = `http://localhost:8080/section/${sections[index+1].id}/card/${card.id}/move/${sections[index].id}`;
+    let response2 = await fetch(url, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' }
+    })
+    if(!response2.ok){
+        console.error('Erro ao mover o card!');
+        return;
     }
-    localStorage.setItem('sections', JSON.stringify(sections));
+    console.log('Card movido!');
+    let newSections = await getSections();
+    console.log(newSections);
     updateAll();
 }
 
@@ -491,7 +529,7 @@ async function getSections() {
         return null;
     }
     const sections = await response.json();
-    console.log('Seções carregadas com sucesso!', sections);
+    console.log('Seções carregadas com sucesso!');
     return sections;
 }
 
